@@ -10,4 +10,8 @@
     <ProjectReference Include="..\BitcoinPriceTracking.BE.Shared\BitcoinPriceTracking.BE.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
