@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BitcoinPriceTracking.BE.Shared\BitcoinPriceTracking.BE.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

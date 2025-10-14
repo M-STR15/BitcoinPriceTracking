@@ -12,4 +12,8 @@
     <Folder Include="MappingProfiles\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BitcoinPriceTracking.BE.Shared\BitcoinPriceTracking.BE.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
