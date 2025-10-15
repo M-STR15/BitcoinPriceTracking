@@ -1,4 +1,6 @@
-﻿namespace BitcoinPriceTracking.BE.BusinessLogic.Models
+﻿using BitcoinPriceTracking.BE.Shared.Models;
+
+namespace BitcoinPriceTracking.BE.BusinessLogic.Models
 {
 
 	public class Rootobject

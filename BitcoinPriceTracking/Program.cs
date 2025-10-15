@@ -15,7 +15,7 @@ builder.Services.AddHttpClient("ApiClient", (sp, client) =>
 	var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
 	var request = httpContextAccessor.HttpContext?.Request;
 
-	var baseAddress = request != null ? $"{request.Scheme}://{request.Host.Value}" : "https://localhost:7246/";
+	var baseAddress = request != null ? $"{request.Scheme}://{request.Host.Value}" : "https://localhost:5157/";
 	client.BaseAddress = new Uri(baseAddress);
 });
 

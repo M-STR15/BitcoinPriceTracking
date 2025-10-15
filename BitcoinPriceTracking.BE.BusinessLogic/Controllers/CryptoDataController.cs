@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BitcoinPriceTracking.BE.BusinessLogic.Models.DTOs;
 using BitcoinPriceTracking.BE.BusinessLogic.Stories;
+using BitcoinPriceTracking.BE.Shared.Models.DTOs;
 using BitcoinPriceTracking.BE.Shared.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
