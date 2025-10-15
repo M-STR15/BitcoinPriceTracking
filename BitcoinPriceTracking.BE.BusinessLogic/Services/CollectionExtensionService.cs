@@ -7,9 +7,11 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Services
 	{
 		public static IServiceCollection AddBitcoinPriceTrackingBeBusinessLogicServices(this IServiceCollection services)
 		{
+			services.AddSingleton<CnbStory>();
 			services.AddSingleton<CryptoDataStory>();
 
-			services.AddHostedService<TimedHostedService>();
+			services.AddHostedService<CoindeskTimedHostedService>();
+			services.AddHostedService<CNBTimedHostedService>();
 			return services;
 		}
 	}

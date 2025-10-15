@@ -6,16 +6,16 @@ using System.Net.Http.Json;
 
 namespace BitcoinPriceTracking.BE.BusinessLogic.Services
 {
-	public class TimedHostedService : IHostedService, IDisposable
+	public class CoindeskTimedHostedService : IHostedService, IDisposable
 	{
 		private readonly IEventLogService _eventLogService;
-		private readonly HttpClient _httpClient;
+		private readonly HttpClient _httpCoindeskClient;
 		private readonly CryptoDataStory _cryptoDataStory;
 		private Timer? _refreshBufferTimer;
 
-		public TimedHostedService(IHttpClientFactory httpClientFactory, IEventLogService eventLogService, CryptoDataStory cryptoDataStory)
+		public CoindeskTimedHostedService(IHttpClientFactory httpClientFactory, IEventLogService eventLogService, CryptoDataStory cryptoDataStory)
 		{
-			_httpClient = httpClientFactory.CreateClient("ApiCoindeskClient");
+			_httpCoindeskClient = httpClientFactory.CreateClient("ApiCoindeskClient");
 			_eventLogService = eventLogService;
 			_cryptoDataStory = cryptoDataStory;
 		}
@@ -55,9 +55,9 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Services
 		{
 			try
 			{
-				if (_httpClient != null)
+				if (_httpCoindeskClient != null)
 				{
-					var result = await _httpClient.GetAsync("/spot/v1/latest/tick?market=coinbase&instruments=BTC-EUR");
+					var result = await _httpCoindeskClient.GetAsync("/spot/v1/latest/tick?market=coinbase&instruments=BTC-EUR");
 
 					if (result.IsSuccessStatusCode)
 					{
@@ -65,7 +65,6 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Services
 						_cryptoDataStory.CryptoDataBTC_EUR = resultData.Data.FirstOrDefault(x => x.Key == "BTC-EUR").Value;
 						//var raw = await result.Content.ReadAsStringAsync();
 						//var test=JsonConvert.DeserializeObject<Rootobject>(raw);
-
 					}
 				}
 			}

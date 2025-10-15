@@ -24,6 +24,13 @@ builder.Services.AddHttpClient("ApiCoindeskClient", (sp, client) =>
 	client.BaseAddress = new Uri(baseAddress);
 });
 
+builder.Services.AddHttpClient("ApiCNBClient", (sp, client) =>
+{
+	var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+	var baseAddress = "https://www.cnb.cz/";
+	client.BaseAddress = new Uri(baseAddress);
+});
+
 builder.Services.AddBitcoinPriceTrackingBeSharedServices();
 builder.Services.AddBitcoinPriceTrackingBeBusinessLogicServices();
 
