@@ -33,12 +33,12 @@ builder.Services.AddHttpClient("ApiCNBClient", (sp, client) =>
 	client.BaseAddress = new Uri(baseAddress);
 });
 
+builder.Services.AddControllers();
 builder.Services.AddBitcoinPriceTrackingBeSharedServices();
 builder.Services.AddBitcoinPriceTrackingBeBusinessLogicServices();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddControllers();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
@@ -83,5 +83,7 @@ app.UseRouting();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+
+app.MapControllers();
 
 app.Run();

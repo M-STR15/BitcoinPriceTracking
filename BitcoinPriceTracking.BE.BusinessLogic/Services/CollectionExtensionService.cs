@@ -12,6 +12,8 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Services
 
 			services.AddHostedService<CoindeskTimedHostedService>();
 			services.AddHostedService<CNBTimedHostedService>();
+
+			//services.AddControllers();
 			return services;
 		}
 	}

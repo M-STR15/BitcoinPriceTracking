@@ -7,7 +7,7 @@
 		public Err Err { get; set; }
 	}
 
-	public class CryptoData
+	public class CryptoData : ICryptoData
 	{
 		public string TYPE { get; set; }
 		public string MARKET { get; set; }
