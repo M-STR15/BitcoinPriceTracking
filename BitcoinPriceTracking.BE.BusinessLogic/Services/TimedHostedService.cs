@@ -1,5 +1,8 @@
-﻿using BitcoinPriceTracking.BE.Shared.Services;
+﻿using BitcoinPriceTracking.BE.BusinessLogic.Models;
+using BitcoinPriceTracking.BE.BusinessLogic.Stories;
+using BitcoinPriceTracking.BE.Shared.Services;
 using Microsoft.Extensions.Hosting;
+using System.Net.Http.Json;
 
 namespace BitcoinPriceTracking.BE.BusinessLogic.Services
 {
@@ -7,12 +10,14 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Services
 	{
 		private readonly IEventLogService _eventLogService;
 		private readonly HttpClient _httpClient;
+		private readonly CryptoDataStory _cryptoDataStory;
 		private Timer? _refreshBufferTimer;
 
-		public TimedHostedService(IHttpClientFactory httpClientFactory, IEventLogService eventLogService)
+		public TimedHostedService(IHttpClientFactory httpClientFactory, IEventLogService eventLogService, CryptoDataStory cryptoDataStory)
 		{
-			_httpClient = httpClientFactory.CreateClient("ApiClient");
+			_httpClient = httpClientFactory.CreateClient("ApiCoindeskClient");
 			_eventLogService = eventLogService;
+			_cryptoDataStory = cryptoDataStory;
 		}
 
 		public void Dispose()
@@ -22,7 +27,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Services
 
 		public Task StartAsync(CancellationToken cancellationToken)
 		{
-			_refreshBufferTimer = new Timer(doWork, null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(20));
+			_refreshBufferTimer = new Timer(doWork, null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(60));
 			var message = "Nastartování timeru pro ukládání hodnot do bufferu.";
 			_eventLogService.LogInformation(Guid.Parse("1f7650c4-65a8-4738-b8a2-13e5140f5cc1"), null, message);
 			return Task.CompletedTask;
@@ -52,10 +57,15 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Services
 			{
 				if (_httpClient != null)
 				{
-					var result = await _httpClient.GetAsync("/api/v1/reports/total-order-by-product");
+					var result = await _httpClient.GetAsync("/spot/v1/latest/tick?market=coinbase&instruments=BTC-EUR");
 
 					if (result.IsSuccessStatusCode)
 					{
+						var resultData = await result.Content.ReadFromJsonAsync<Rootobject>();
+						_cryptoDataStory.CryptoDataBTC_EUR = resultData.Data.FirstOrDefault(x => x.Key == "BTC-EUR").Value;
+						//var raw = await result.Content.ReadAsStringAsync();
+						//var test=JsonConvert.DeserializeObject<Rootobject>(raw);
+
 					}
 				}
 			}

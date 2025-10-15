@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using BitcoinPriceTracking.Data;
 using BitcoinPriceTracking.BE.Shared.Services;
+using BitcoinPriceTracking.BE.BusinessLogic.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,22 +17,27 @@ builder.Services.AddHttpClient("ApiClient", (sp, client) =>
 	client.BaseAddress = new Uri(baseAddress);
 });
 
+builder.Services.AddHttpClient("ApiCoindeskClient", (sp, client) =>
+{
+	var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+	var baseAddress = "https://data-api.coindesk.com/";
+	client.BaseAddress = new Uri(baseAddress);
+});
+
+builder.Services.AddBitcoinPriceTrackingBeSharedServices();
+builder.Services.AddBitcoinPriceTrackingBeBusinessLogicServices();
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
-
-builder.Services.AddSingleton<IEventLogService, EventLogService>();
-
-
-builder.Services.AddHostedService<TimedHostedService>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
+	app.UseExceptionHandler("/Error");
 }
 
 
