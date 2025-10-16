@@ -38,7 +38,6 @@ builder.Services.AddBitcoinPriceTrackingBeBusinessLogicServices<MsSqlDbContext>(
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

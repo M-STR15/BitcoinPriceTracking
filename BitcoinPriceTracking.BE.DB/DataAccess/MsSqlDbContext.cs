@@ -1,5 +1,6 @@
 ﻿using BitcoinPriceTracking.BE.DB.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace BitcoinPriceTracking.BE.DB.DataAccess
 {
@@ -7,24 +8,16 @@ namespace BitcoinPriceTracking.BE.DB.DataAccess
 	{
 		public MsSqlDbContext(DbContextOptions<MsSqlDbContext> options) : base(options) { }
 
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-			if (!optionsBuilder.IsConfigured)
-			{
-				optionsBuilder.UseSqlServer(@"Server=DESKTOP-JS0N1LD\SQLEXPRESS;Integrated Security=true;TrustServerCertificate=true;Database=BitcoinPriceTracking");
-			}
-		}
-
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			_modelBuilder = modelBuilder;
-			modelBuilder.Entity<CryptoData>().HasNoKey();
+			//modelBuilder.Entity<CryptoData>().HasNoKey();
+
 			base.OnModelCreating(modelBuilder);
 
-			//insertDefaultValues_Activities();
-			//insertDefaultValues_TypeShifts();
-
-			//setSubModuleTable();
+			// insertDefaultValues_Activities();
+			// insertDefaultValues_TypeShifts();
+			// setSubModuleTable();
 		}
 	}
 }

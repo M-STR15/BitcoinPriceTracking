@@ -30,14 +30,16 @@ namespace BitcoinPriceTracking.BE.DB.Repositories
 		{
 			try
 			{
+				var data = (CryptoData)cryptoData;
 				var context = _contextFactory();
-				await context.CryptoDatas.AddAsync((CryptoData)cryptoData);
+				await context.CryptoDatas.AddAsync(data);
 				await context.SaveChangesAsync();
 
 				return cryptoData;
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				var test = ex;
 				throw;
 			}
 		}

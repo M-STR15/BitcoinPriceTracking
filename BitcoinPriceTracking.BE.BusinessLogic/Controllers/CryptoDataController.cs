@@ -15,8 +15,8 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 	{
 		private readonly CnbStory _cnbStory;
 		private readonly CryptoDataStory _cryptoDataStory;
-		private readonly ICoindeskRepositories _coindeskRepositories;
-		public CryptoDataController(IMapper mapper, IEventLogService eventLogService, CnbStory cnbStory, CryptoDataStory cryptoDataStory, ICoindeskRepositories coindeskRepositories) : base(mapper, eventLogService)
+		private readonly CoindeskRepositories<MsSqlDbContext> _coindeskRepositories;
+		public CryptoDataController(IMapper mapper, IEventLogService eventLogService, CnbStory cnbStory, CryptoDataStory cryptoDataStory, CoindeskRepositories<MsSqlDbContext> coindeskRepositories) : base(mapper, eventLogService)
 		{
 			_cnbStory = cnbStory;
 			_cryptoDataStory = cryptoDataStory;

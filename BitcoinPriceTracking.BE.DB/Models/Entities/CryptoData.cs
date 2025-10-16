@@ -9,6 +9,8 @@ namespace BitcoinPriceTracking.BE.DB.Models.Entities
 	[Table("CryptoData", Schema = "dbo")]
 	public class CryptoData : ICryptoData
 	{
+		[Key]
+		public int Id { get; set; }
 		public string BASE { get; set; }
 		[Column("BASE_ID")]
 		[Comment("test")]

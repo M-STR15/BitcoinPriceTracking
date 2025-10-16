@@ -18,6 +18,8 @@ namespace BitcoinPriceTracking.BE.DB.Migrations.MSSQL
                 schema: "dbo",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     BASE = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BASE_ID = table.Column<int>(type: "int", nullable: false, comment: "test"),
                     BEST_ASK = table.Column<float>(type: "real", nullable: false),
@@ -268,6 +270,7 @@ namespace BitcoinPriceTracking.BE.DB.Migrations.MSSQL
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_CryptoData", x => x.Id);
                 });
         }
 

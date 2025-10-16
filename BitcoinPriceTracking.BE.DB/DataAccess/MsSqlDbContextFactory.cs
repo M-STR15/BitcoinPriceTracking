@@ -8,20 +8,21 @@ namespace BitcoinPriceTracking.BE.DB.DataAccess
 	{
 		public MsSqlDbContext CreateDbContext(string[] args)
 		{
-			// Získá aktuální adresář (bude to složka projektu .BE.DB)
 			var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "BitcoinPriceTracking");
-
-			// Pokud se appsettings.json nachází ve startup projektu,
-			// můžeš přidat o úroveň výš:
-			// var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "BitcoinPriceTracking");
 
 			var configuration = new ConfigurationBuilder()
 				.SetBasePath(basePath)
-				.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
 				.Build();
 
-			var connectionString = configuration.GetConnectionString("ConnectionStrings")
-				?? "Server=DESKTOP-JS0N1LD\\SQLEXPRESS;Integrated Security=true;TrustServerCertificate=true;Database=BitcoinPriceTracking";
+			// správný název connection stringu
+			var connectionString = configuration.GetConnectionString("ConnectionStringsMSSQL");
+
+			// fallback, pokud configuration selže
+			if (string.IsNullOrEmpty(connectionString))
+			{
+				connectionString = @"Server=DESKTOP-JS0N1LD\SQLEXPRESS;Database=BitcoinPriceTracking;Trusted_Connection=True;TrustServerCertificate=True;";
+			}
 
 			var optionsBuilder = new DbContextOptionsBuilder<MsSqlDbContext>();
 			optionsBuilder.UseSqlServer(connectionString);

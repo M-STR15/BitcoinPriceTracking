@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BitcoinPriceTracking.BE.DB.Migrations.MSSQL
 {
     [DbContext(typeof(MsSqlDbContext))]
-    [Migration("20251016204701_inicialization")]
+    [Migration("20251016220350_inicialization")]
     partial class inicialization
     {
         /// <inheritdoc />
@@ -26,6 +26,12 @@ namespace BitcoinPriceTracking.BE.DB.Migrations.MSSQL
 
             modelBuilder.Entity("BitcoinPriceTracking.BE.DB.Models.Entities.CryptoData", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<string>("BASE")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -779,6 +785,8 @@ namespace BitcoinPriceTracking.BE.DB.Migrations.MSSQL
                     b.Property<string>("TYPE")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("CryptoData", "dbo");
                 });
