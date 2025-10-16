@@ -2,14 +2,7 @@
 
 namespace BitcoinPriceTracking.BE.BusinessLogic.Models
 {
-
-	public class Rootobject
-	{
-		public Dictionary<string, CryptoData> Data { get; set; }
-		public Err Err { get; set; }
-	}
-
-	public class CryptoData : ICryptoData
+	public class CryptoDataDto : ICryptoData
 	{
 		public string TYPE { get; set; }
 		public string MARKET { get; set; }
@@ -258,19 +251,6 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Models
 		public int LIFETIME_TOTAL_TRADES_UNKNOWN { get; set; }
 		public float LIFETIME_CHANGE { get; set; }
 		public float LIFETIME_CHANGE_PERCENTAGE { get; set; }
-	}
-
-	public class Err
-	{
-		public int type { get; set; }
-		public string message { get; set; }
-		public Other_Info other_info { get; set; }
-	}
-
-	public class Other_Info
-	{
-		public string param { get; set; }
-		public string[] values { get; set; }
 	}
 
 }

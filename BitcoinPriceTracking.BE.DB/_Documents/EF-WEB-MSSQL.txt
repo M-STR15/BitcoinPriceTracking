@@ -1,0 +1,12 @@
+﻿// je potřeba přepnout Package manager Console na BitcoinPriceTracking
+
+
+//první inicializace DB
+dotnet ef migrations add inicialization --project BitcoinPriceTracking.BE.DB --startup-project BitcoinPriceTracking --output-dir Migrations/MSSQL --context MsSqlDbContext
+// následující změny v DB
+dotnet ef migrations add Update01 --project BitcoinPriceTracking.BE.DB --startup-project BitcoinPriceTracking --output-dir Migrations/MSSQL --context MsSqlDbContext
+
+//nahrání změn do DB
+dotnet ef database update --project BitcoinPriceTracking.BE.DB --startup-project BitcoinPriceTracking --context MsSqlDbContext
+//odstranění DB
+dotnet ef database drop --project BitcoinPriceTracking.BE.DB --startup-project BitcoinPriceTracking --context MsSqlDbContext -f

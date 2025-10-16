@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using BitcoinPriceTracking.BE.BusinessLogic.Stories;
+using BitcoinPriceTracking.BE.DB.DataAccess;
+using BitcoinPriceTracking.BE.DB.Models.Entities;
+using BitcoinPriceTracking.BE.DB.Repositories;
 using BitcoinPriceTracking.BE.Shared.Models.DTOs;
 using BitcoinPriceTracking.BE.Shared.Services;
 using Microsoft.AspNetCore.Http;
@@ -12,10 +15,12 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 	{
 		private readonly CnbStory _cnbStory;
 		private readonly CryptoDataStory _cryptoDataStory;
-		public CryptoDataController( IEventLogService eventLogService, CnbStory cnbStory, CryptoDataStory cryptoDataStory) : base( eventLogService)
+		private readonly ICoindeskRepositories _coindeskRepositories;
+		public CryptoDataController(IMapper mapper, IEventLogService eventLogService, CnbStory cnbStory, CryptoDataStory cryptoDataStory, ICoindeskRepositories coindeskRepositories) : base(mapper, eventLogService)
 		{
 			_cnbStory = cnbStory;
 			_cryptoDataStory = cryptoDataStory;
+			_coindeskRepositories = coindeskRepositories;
 		}
 
 		#region GET
@@ -28,8 +33,8 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		/// <returns>
 		/// 200 OK s <see cref="CryptoDataDto"/> pokud jsou data dostupná, 404 Not Found pokud nejsou, nebo 500 Internal Server Error při výjimce.
 		/// </returns>
-		[HttpGet("api/v1/crypto-data/BTC-EUC")]
-		public async Task<ActionResult<CryptoDataDto>> GetActivitiesAsync()
+		[HttpGet("api/v1/crypto-data/buffer/BTC-EUC")]
+		public async Task<ActionResult<CryptoDataDto>> GetCryptoDataFromBufferAsync()
 		{
 			try
 			{
@@ -46,6 +51,52 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 			}
 		}
 
+		[HttpGet("api/v1/crypto-data/database/last-record")]
+		public async Task<ActionResult<CryptoDataDto>> GetCryptoDataFromDatabaseAsync()
+		{
+			try
+			{
+				var cryptoData = await _coindeskRepositories.GetLastCryptoDataAsync();
+
+				if (cryptoData != null)
+					return cryptoData != null ? Ok(cryptoData) : BadRequest();
+				else
+					return NotFound();
+			}
+			catch (Exception ex)
+			{
+				_eventLogService.LogError(Guid.Parse("92344ec4-e18f-4cef-ab10-631c18775e67"), ex);
+				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+			}
+		}
+
 		#endregion GET
+
+		#region POST
+
+		[HttpPost("api/v1/crypto-data/database")]
+		public async Task<ActionResult<CryptoDataDto>> AddSubModulesAsync([FromBody] CryptoDataDto cryptoDataDto)
+		{
+			try
+			{
+				var cryptoData = _mapper.Map<CryptoData>(cryptoDataDto);
+				if (cryptoData != null)
+				{
+					var result =  await _coindeskRepositories.AddCryptoDataAsync(cryptoData);
+					cryptoDataDto = _mapper.Map<CryptoDataDto>(result);
+					return result != null ? Ok(cryptoDataDto) : Problem();
+				}
+				else
+				{
+					return BadRequest();
+				}
+			}
+			catch (Exception ex)
+			{
+				_eventLogService.LogError(Guid.Parse("71c4af17-9b5c-4ccc-a474-d5efcd8fb188"), ex);
+				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+			}
+		}
+		#endregion POST
 	}
 }

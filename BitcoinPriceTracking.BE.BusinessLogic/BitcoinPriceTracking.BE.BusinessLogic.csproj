@@ -8,17 +8,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="MappingProfiles\" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="AutoMapper" Version="15.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.10" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.3.2" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\BitcoinPriceTracking.BE.DB\BitcoinPriceTracking.BE.DB.csproj" />
 		<ProjectReference Include="..\BitcoinPriceTracking.BE.Shared\BitcoinPriceTracking.BE.Shared.csproj" />
 	</ItemGroup>
 

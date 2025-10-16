@@ -1,10 +1,8 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using BitcoinPriceTracking.BE.BusinessLogic.Infrastructure;
+using BitcoinPriceTracking.BE.DB.DataAccess;
+using BitcoinPriceTracking.BE.Shared.Infrastructure;
 using BitcoinPriceTracking.Data;
-using BitcoinPriceTracking.BE.Shared.Services;
-using BitcoinPriceTracking.BE.BusinessLogic.Services;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +33,7 @@ builder.Services.AddHttpClient("ApiCNBClient", (sp, client) =>
 
 builder.Services.AddControllers();
 builder.Services.AddBitcoinPriceTrackingBeSharedServices();
-builder.Services.AddBitcoinPriceTrackingBeBusinessLogicServices();
+builder.Services.AddBitcoinPriceTrackingBeBusinessLogicServices<MsSqlDbContext>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();

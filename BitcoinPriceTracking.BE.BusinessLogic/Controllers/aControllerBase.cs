@@ -12,9 +12,10 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 	public abstract class aControllerBase : ControllerBase
 	{
 		protected readonly IEventLogService _eventLogService;
-
-		public aControllerBase( IEventLogService eventLogService)
+		protected readonly IMapper _mapper;
+		public aControllerBase(IMapper mapper, IEventLogService eventLogService)
 		{
+			_mapper = mapper;
 			_eventLogService = eventLogService;
 		}
 	}
