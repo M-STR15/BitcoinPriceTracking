@@ -3,8 +3,8 @@ using BitcoinPriceTracking.BE.BusinessLogic.Stories;
 using BitcoinPriceTracking.BE.DB.DataAccess;
 using BitcoinPriceTracking.BE.DB.Models.Entities;
 using BitcoinPriceTracking.BE.DB.Repositories;
-using BitcoinPriceTracking.BE.Shared.Models.DTOs;
 using BitcoinPriceTracking.BE.Shared.Services;
+using BitcoinPriceTracking.BE.Shared.Shared.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,12 +13,10 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 	[ApiExplorerSettings(GroupName = "v1")]
 	public class CryptoDataController : aControllerBase
 	{
-		private readonly CnbStory _cnbStory;
 		private readonly CryptoDataStory _cryptoDataStory;
 		private readonly CoindeskRepositories<MsSqlDbContext> _coindeskRepositories;
 		public CryptoDataController(IMapper mapper, IEventLogService eventLogService, CnbStory cnbStory, CryptoDataStory cryptoDataStory, CoindeskRepositories<MsSqlDbContext> coindeskRepositories) : base(mapper, eventLogService)
 		{
-			_cnbStory = cnbStory;
 			_cryptoDataStory = cryptoDataStory;
 			_coindeskRepositories = coindeskRepositories;
 		}
@@ -82,7 +80,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 				var cryptoData = _mapper.Map<CryptoData>(cryptoDataDto);
 				if (cryptoData != null)
 				{
-					var result =  await _coindeskRepositories.AddCryptoDataAsync(cryptoData);
+					var result = await _coindeskRepositories.AddCryptoDataAsync(cryptoData);
 					cryptoDataDto = _mapper.Map<CryptoDataDto>(result);
 					return result != null ? Ok(cryptoDataDto) : Problem();
 				}

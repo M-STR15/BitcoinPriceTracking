@@ -1,6 +1,6 @@
 ﻿using BitcoinPriceTracking.BE.Shared.Models;
 
-namespace BitcoinPriceTracking.BE.BusinessLogic.Models
+namespace BitcoinPriceTracking.BE.Shared.Shared.DTOs
 {
 	public class CryptoDataDto : ICryptoData
 	{

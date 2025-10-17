@@ -1,5 +1,5 @@
-﻿using BitcoinPriceTracking.BE.BusinessLogic.Models;
-using BitcoinPriceTracking.BE.BusinessLogic.Stories;
+﻿using BitcoinPriceTracking.BE.BusinessLogic.Stories;
+using BitcoinPriceTracking.BE.Shared.Models.DTOs._OpenInterestInstrumentLatestTick;
 using BitcoinPriceTracking.BE.Shared.Services;
 using Microsoft.Extensions.Hosting;
 using System.Net.Http.Json;

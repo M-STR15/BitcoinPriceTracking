@@ -1,4 +1,4 @@
-﻿using BitcoinPriceTracking.BE.BusinessLogic.Models;
+﻿using BitcoinPriceTracking.BE.Shared.Shared.DTOs;
 
 namespace BitcoinPriceTracking.BE.BusinessLogic.Stories
 {
