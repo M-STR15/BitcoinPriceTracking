@@ -17,4 +17,8 @@
 		<ProjectReference Include="..\BitcoinPriceTracking.BE.Shared\BitcoinPriceTracking.BE.Shared.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Models\" />
+	</ItemGroup>
+
 </Project>

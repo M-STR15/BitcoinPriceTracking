@@ -1,4 +1,4 @@
-﻿using BitcoinPriceTracking.BE.Shared.Models;
+﻿using BitcoinPriceTracking.BE.Shared.Interfaces.Models;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

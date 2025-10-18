@@ -1,4 +1,4 @@
-﻿using BitcoinPriceTracking.BE.Shared.Models;
+﻿using BitcoinPriceTracking.BE.Shared.Interfaces.Models;
 
 namespace BitcoinPriceTracking.BE.Shared.Shared.DTOs
 {

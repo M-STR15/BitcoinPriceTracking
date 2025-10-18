@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using BitcoinPriceTracking.BE.BusinessLogic.Models;
 using BitcoinPriceTracking.BE.DB.Models.Entities;
-using BitcoinPriceTracking.BE.Shared.Models;
-using BitcoinPriceTracking.BE.Shared.Models.DTOs;
+using BitcoinPriceTracking.BE.Shared.Interfaces.Models;
+using BitcoinPriceTracking.BE.Shared.Shared.DTOs;
 
 namespace BitcoinPriceTracking.BE.BusinessLogic.MappingProfiles
 {
@@ -10,6 +11,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.MappingProfiles
 		public MappingProfile()
 		{
 			CreateMap<CryptoData, CryptoDataDto>().ReverseMap();
+			CreateMap<kurzy, kurzyDTO>().ReverseMap();
 		}
 	}
 }

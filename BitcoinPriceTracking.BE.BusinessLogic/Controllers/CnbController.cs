@@ -6,11 +6,6 @@ using BitcoinPriceTracking.BE.Shared.Services;
 using BitcoinPriceTracking.BE.Shared.Shared.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 {
@@ -18,7 +13,6 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 	public class CnbController : aControllerBase
 	{
 		private readonly CnbStory _cnbStory;
-		private readonly CoindeskRepositories<MsSqlDbContext> _coindeskRepositories;
 		public CnbController(IMapper mapper, IEventLogService eventLogService, CnbStory cnbStory) : base(mapper, eventLogService)
 		{
 			_cnbStory = cnbStory;
@@ -29,15 +23,15 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		{
 			try
 			{
-				var cryptoData = _cnbStory.DailyRate;
-				if (cryptoData != null)
-					return cryptoData != null ? Ok(cryptoData) : BadRequest();
+				var cnbData = _cnbStory.DailyRate;
+				if (cnbData != null)
+					return cnbData != null ? Ok(cnbData) : BadRequest();
 				else
 					return NotFound();
 			}
 			catch (Exception ex)
 			{
-				_eventLogService.LogError(Guid.Parse("92344ec4-e18f-4cef-ab10-631c18775e67"), ex);
+				_eventLogService.LogError(Guid.Parse("3c46ac36-052b-4461-b0b3-36f6c1c6acd3"), ex);
 				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 			}
 		}

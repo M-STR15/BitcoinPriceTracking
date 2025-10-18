@@ -1,8 +1,8 @@
 ﻿using BitcoinPriceTracking.BE.BusinessLogic.Models;
 using BitcoinPriceTracking.BE.BusinessLogic.Stories;
+using BitcoinPriceTracking.BE.Shared.Interfaces.Models;
 using BitcoinPriceTracking.BE.Shared.Services;
 using Microsoft.Extensions.Hosting;
-using System.Net.Http.Json;
 using System.Xml.Serialization;
 
 namespace BitcoinPriceTracking.BE.BusinessLogic.Services

@@ -1,6 +1,6 @@
 ﻿using BitcoinPriceTracking.BE.DB.DataAccess;
 using BitcoinPriceTracking.BE.DB.Models.Entities;
-using BitcoinPriceTracking.BE.Shared.Models;
+using BitcoinPriceTracking.BE.Shared.Interfaces.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BitcoinPriceTracking.BE.DB.Repositories

@@ -1,5 +1,6 @@
 ﻿@page "/data-from-api"
-@using BitcoinPriceTracking.BE.Shared.Models.DTOs
+@using BitcoinPriceTracking.BE.BusinessLogic.Models
+@using BitcoinPriceTracking.BE.Shared.Shared.DTOs
 @using BitcoinPriceTracking.Data
 @using System.Reflection
 @using BitcoinPriceTracking.Enums
@@ -39,18 +40,18 @@
     @if (selectedTab == eTab.CryptoData)
     {
         <p>Zobrazuje surová data z https://data-api.coindesk.com/spot/v1/latest/tick?market=coinbase&instruments=BTC-EUR</p>
+        <button @onclick="addAddCryptoDataToDb_Click">Add actual data to database</button>
         @if (_cryptoDataDto == null)
         {
             <p><em>Loading...</em></p>
         }
         else
         {
-            <button @onclick="addAddCryptoDataToDb_Click">Add actual data to database</button>
             <table class="table table-striped table-bordered">
                 <tbody>
-                    @if (_properties != null)
+                    @if (_cryptoDataDtoProperties != null)
                     {
-                        @foreach (var prop in _properties)
+                        @foreach (var prop in _cryptoDataDtoProperties)
                         {
                             <tr>
                                 <th>@prop.Name</th>
@@ -65,33 +66,105 @@
     else if (selectedTab == eTab.CnbData)
     {
         <p>Zobrazuje surová data z </p>
+        @if (_cnbDataDto == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    @foreach (var prop in _cnbDataDtoProperties)
+                    {
+                        var value = prop.GetValue(_cnbDataDto);
+
+                        <tr>
+                            <th>@prop.Name</th>
+                            <td>
+                                @if (value == null)
+                                {
+                                    <span>-</span>
+                                }
+                                else if (value is string || value.GetType().IsPrimitive || value is decimal || value is DateTime)
+                                {
+                                    @value
+                                }
+                                else if (value is System.Collections.IEnumerable enumerable && !(value is string))
+                                {
+                                    <!-- Kolekce – vykresli tabulku pro každý prvek -->
+                                    @foreach (var item in enumerable)
+                                    {
+                                        <div class="ms-3 mt-2">
+                                            <ObjectTable Data="item" />
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <!-- Objekt (např. kurzyTabulka) – vykresli zanořenou tabulku -->
+                                    <div class="ms-3 mt-2">
+                                        <ObjectTable Data="value" />
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     }
 </div>
 
 @code {
     private eTab selectedTab = eTab.CryptoData;
+
     private CryptoDataDto? _cryptoDataDto;
-    private PropertyInfo[]? _properties = Array.Empty<PropertyInfo>();
+    private PropertyInfo[]? _cryptoDataDtoProperties = Array.Empty<PropertyInfo>();
+
+    private kurzy? _cnbDataDto;
+    private PropertyInfo[]? _cnbDataDtoProperties = Array.Empty<PropertyInfo>();
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            if (_httpClient != null)
-            {
-                var response = await _httpClient.GetAsync("api/v1/crypto-data/buffer/BTC-EUC");
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    _cryptoDataDto = await response.Content.ReadFromJsonAsync<CryptoDataDto>();
-                    if (_cryptoDataDto != null)
-                        _properties = _cryptoDataDto.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                }
-            }
+            await loadDataCryptoData();
+            await loadDataCnbData();
+            StateHasChanged();
         }
         catch (Exception ex)
         {
             var test = ex;
+        }
+    }
+
+    private async Task loadDataCryptoData()
+    {
+        if (_httpClient != null)
+        {
+            var response = await _httpClient.GetAsync("api/v1/crypto-data/buffer/BTC-EUC");
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                _cryptoDataDto = await response.Content.ReadFromJsonAsync<CryptoDataDto>();
+                if (_cryptoDataDto != null)
+                    _cryptoDataDtoProperties = _cryptoDataDto.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            }
+        }
+    }
+
+    private async Task loadDataCnbData()
+    {
+        if (_httpClient != null)
+        {
+            var response = await _httpClient.GetAsync("api/v1/cnb-data/buffer");
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                _cnbDataDto = await response.Content.ReadFromJsonAsync<kurzy>();
+                if (_cnbDataDto != null)
+                    _cnbDataDtoProperties = _cnbDataDto.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            }
         }
     }
 

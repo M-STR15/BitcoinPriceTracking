@@ -1,4 +1,4 @@
-﻿namespace BitcoinPriceTracking.BE.Shared.Models
+﻿namespace BitcoinPriceTracking.BE.Shared.Interfaces.Models
 {
 	public interface ICryptoData
 	{
