@@ -1,7 +1,37 @@
 ﻿@page "/data-from-database"
+@using BitcoinPriceTracking.BE.Shared.Models.DTOs
+@using BitcoinPriceTracking.FE.Components
 
-<h3>DataFromDatabase</h3>
+ @inherits BasePage
+
+@if (_cryptoDataNotesDTO == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <MDynamicTable Items="_cryptoDataNotesDTO" ColumnOrder="_columnOrder" />
+}
 
 @code {
+    private IEnumerable<CryptoDataNoteDTO>? _cryptoDataNotesDTO;
+    private List<string> _columnOrder = new List<string> { "Id", "TimeStamp", "Note", "CryptoData" };
 
+    protected override async Task OnInitializedAsync()
+    {
+        await loadDataCryptoDataNotesAsync();
+    }
+
+    private async Task loadDataCryptoDataNotesAsync()
+    {
+        if (_httpClient != null)
+        {
+            var response = await _httpClient.GetAsync("api/v1/crypto-data-note");
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                _cryptoDataNotesDTO = await response.Content.ReadFromJsonAsync<IEnumerable<CryptoDataNoteDTO>>();
+            }
+        }
+    }
 }

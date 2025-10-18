@@ -1,0 +1,116 @@
+﻿@using System.Reflection
+@typeparam T
+
+@if (Item is not null)
+{
+    var props = GetPropertiesInOrder();
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                @foreach (var prop in props)
+                {
+                    <th>@prop.Name</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                @foreach (var prop in props)
+                {
+                    var value = prop.GetValue(Item);
+                    bool hasNested = value != null && (value.GetType().IsPrimitive || value is string || value is DateTime);
+
+
+                    if (value is null)
+                    {
+                        <td></td>
+                    }
+                    else if (hasNested)
+                    {
+                        // Normální hodnota (string, číslo, datum, apod.)
+                        <td>@value</td>
+                    }
+                    else
+                    {
+                        // Kolekce (např. List<T>)
+                        <td>
+                            @if (value is System.Collections.IEnumerable enumerable)
+                            {
+                                <MTableForProperty Item="value" />
+                            }
+                        </td>
+                    }
+                }
+            </tr>
+        </tbody>
+    </table>
+}
+else if (Items is not null)
+{
+    var props = GetPropertiesInOrder();
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                @foreach (var prop in props)
+                {
+                    <th>@prop.Name</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Items)
+            {
+                <tr>
+                    @foreach (var prop in props)
+                    {
+                        var value = prop.GetValue(item);
+                        bool hasNested = value != null && (value.GetType().IsPrimitive || value is string || value is DateTime);
+
+                        if (value is null)
+                        {
+                            <td></td>
+                        }
+                        else if (hasNested)
+                        {
+                            <td>@value</td>
+                        }
+                        else
+                        {
+                            <td>
+                                @if (value is System.Collections.IEnumerable enumerable)
+                                {
+                                    <MTableForProperty Item="value" />
+                                }
+                            </td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter] public T? Item { get; set; }
+    [Parameter] public IEnumerable<T>? Items { get; set; }
+    [Parameter] public List<string>? ColumnOrder { get; set; }
+
+    private PropertyInfo[] GetPropertiesInOrder()
+    {
+        var allProps = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        if (ColumnOrder == null || ColumnOrder.Count == 0)
+            return allProps;
+
+        // Vrátí jen properties, které jsou v ColumnOrder, ve stejném pořadí
+        var ordered = ColumnOrder
+            .Select(name => allProps.FirstOrDefault(p => p.Name == name))
+            .Where(p => p != null)
+            .Cast<PropertyInfo>()
+            .ToArray();
+
+        return ordered;
+    }
+}

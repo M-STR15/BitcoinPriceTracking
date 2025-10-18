@@ -69,7 +69,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		}
 
 		[HttpGet("api/v1/crypto-data-note")]
-		public async Task<ActionResult<CryptoDataNoteDTO>> GetCryptoDataNoteFromDatabaseAsync()
+		public async Task<ActionResult<IEnumerable<CryptoDataNoteDTO>>> GetCryptoDataNoteFromDatabaseAsync()
 		{
 			try
 			{

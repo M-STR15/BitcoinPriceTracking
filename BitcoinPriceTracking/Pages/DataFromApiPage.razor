@@ -49,7 +49,7 @@
         }
         else
         {
-            <MTableForProperty Data="_cryptoDataDto" />
+            <MTableForProperty Item="_cryptoDataDto" />
         }
     }
     else if (selectedTab == eTab.CnbData)
@@ -61,7 +61,7 @@
         }
         else
         {
-            <MTableForProperty Data="_cnbDataDto" />
+            <MTableForProperty Item="_cnbDataDto" />
         }
     }
 </div>
@@ -96,11 +96,7 @@
             var response = await _httpClient.GetAsync("api/v1/crypto-data/buffer/BTC-EUC");
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
                 _cryptoDataDto = await response.Content.ReadFromJsonAsync<CryptoDataBaseDTO>();
-                if (_cryptoDataDto != null)
-                    _cryptoDataDtoProperties = _cryptoDataDto.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            }
         }
     }
 
@@ -111,11 +107,7 @@
             var response = await _httpClient.GetAsync("api/v1/cnb-data/buffer");
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
                 _cnbDataDto = await response.Content.ReadFromJsonAsync<kurzy>();
-                if (_cnbDataDto != null)
-                    _cnbDataDtoProperties = _cnbDataDto.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            }
         }
     }
 
@@ -130,7 +122,7 @@
     {
         if (_httpClient != null)
         {
-            var aaa = await _httpClient.PostAsJsonAsync<CryptoDataBaseDTO>("/api/v1/crypto-data/database", _cryptoDataDto);
+            var result = await _httpClient.PostAsJsonAsync<CryptoDataBaseDTO>("/api/v1/crypto-data/database", _cryptoDataDto);
         }
     }
 }

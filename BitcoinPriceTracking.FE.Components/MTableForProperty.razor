@@ -1,4 +1,5 @@
-﻿@using System.Reflection
+﻿@typeparam T
+@using System.Reflection
 
 <table class="table table-striped table-bordered">
     <tbody>
@@ -6,15 +7,33 @@
         {
             @foreach (var prop in _properties)
             {
-                var value = prop.GetValue(Data);
+                object? value = null;
                 bool hasNested = value != null && !(value is string || value.GetType().IsPrimitive || value is decimal || value is DateTime);
+                bool hasValue = false;
+
+                try
+                {
+                    // Pokus získat hodnotu
+                    value = prop.GetValue(Item);
+                    hasValue = true;
+                }
+                catch (TargetParameterCountException)
+                {
+                    // ignoruj properties s parametry
+                    hasValue = false;
+                }
+                catch
+                {
+                    // jiná chyba - můžeme taky jen ignorovat nebo logovat
+                    hasValue = false;
+                }
 
                 <tr>
                     <th style="width:200px;">
                         @prop.Name
                     </th>
                     <td>
-                        @if (value == null)
+                        @if (!hasValue || value == null)
                         {
                             <span>-</span>
                         }
@@ -38,12 +57,12 @@
                                         {
                                             @foreach (var item in enumerable)
                                             {
-                                                <MTableForProperty Data="item" />
+                                                <MTableForProperty Item="item" />
                                             }
                                         }
                                         else
                                         {
-                                            <MTableForProperty Data="value" />
+                                            <MTableForProperty Item="value" />
                                         }
                                     </div>
                                 }
@@ -57,18 +76,15 @@
 </table>
 @code {
     private PropertyInfo[]? _properties;
-    private object? _data;
+    private T? _item;
     [Parameter]
-    public object? Data
+    public T? Item
     {
-        get => _data;
+        get => _item;
         set
         {
-            if (_data != value)
-            {
-                _data = value;
-                _properties = _data?.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            }
+            _item = value;
+            _properties = _item?.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
         }
     }
 
