@@ -1,0 +1,85 @@
+﻿@using System.Reflection
+
+<table class="table table-striped table-bordered">
+    <tbody>
+        @if (_properties != null)
+        {
+            @foreach (var prop in _properties)
+            {
+                var value = prop.GetValue(Data);
+                bool hasNested = value != null && !(value is string || value.GetType().IsPrimitive || value is decimal || value is DateTime);
+
+                <tr>
+                    <th style="width:200px;">
+                        @prop.Name
+                    </th>
+                    <td>
+                        @if (value == null)
+                        {
+                            <span>-</span>
+                        }
+                        else if (!hasNested)
+                        {
+                            @value
+                        }
+                        else
+                        {
+                            <!-- rozevírací sekce -->
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary"
+                                        @onclick="@(() => Toggle(prop.Name))">
+                                    @(IsExpanded(prop.Name) ? "▼ Sbalit" : "▶ Rozbalit")
+                                </button>
+
+                                @if (IsExpanded(prop.Name))
+                                {
+                                    <div class="ms-3 mt-2">
+                                        @if (value is System.Collections.IEnumerable enumerable && !(value is string))
+                                        {
+                                            @foreach (var item in enumerable)
+                                            {
+                                                <MTableForProperty Data="item" />
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <MTableForProperty Data="value" />
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@code {
+    private PropertyInfo[]? _properties;
+    private object? _data;
+    [Parameter]
+    public object? Data
+    {
+        get => _data;
+        set
+        {
+            if (_data != value)
+            {
+                _data = value;
+                _properties = _data?.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            }
+        }
+    }
+
+    private HashSet<string> _expanded = new();
+
+    private void Toggle(string key)
+    {
+        if (!_expanded.Add(key))
+            _expanded.Remove(key);
+    }
+
+    private bool IsExpanded(string key) => _expanded.Contains(key);
+
+}

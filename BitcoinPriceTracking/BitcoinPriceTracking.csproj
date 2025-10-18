@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BitcoinPriceTracking.BE.BusinessLogic\BitcoinPriceTracking.BE.BusinessLogic.csproj" />
     <ProjectReference Include="..\BitcoinPriceTracking.BE.Shared\BitcoinPriceTracking.BE.Shared.csproj" />
+    <ProjectReference Include="..\BitcoinPriceTracking.FE.Components\BitcoinPriceTracking.FE.Components.csproj" />
   </ItemGroup>
 
 
