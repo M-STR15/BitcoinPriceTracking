@@ -61,7 +61,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Services
 
 					if (result.IsSuccessStatusCode)
 					{
-						var resultData = await result.Content.ReadFromJsonAsync<RootobjectDto>();
+						var resultData = await result.Content.ReadFromJsonAsync<RootobjectDTO>();
 						_cryptoDataStory.CryptoDataBTC_EUR = resultData.Data.FirstOrDefault(x => x.Key == "BTC-EUR").Value;
 						//var raw = await result.Content.ReadAsStringAsync();
 						//var test=JsonConvert.DeserializeObject<Rootobject>(raw);

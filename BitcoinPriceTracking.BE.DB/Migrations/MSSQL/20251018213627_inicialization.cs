@@ -19,7 +19,8 @@ namespace BitcoinPriceTracking.BE.DB.Migrations.MSSQL
                 schema: "dbo",
                 columns: table => new
                 {
-                    Id = table.Column<double>(type: "float", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     BASE = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BASE_ID = table.Column<double>(type: "float", nullable: false, comment: "test"),
                     BEST_ASK = table.Column<double>(type: "float", nullable: false),
@@ -273,11 +274,45 @@ namespace BitcoinPriceTracking.BE.DB.Migrations.MSSQL
                 {
                     table.PrimaryKey("PK_Crypto_datas", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Crypto_data_notes",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CryptoDataId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Crypto_data_notes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Crypto_data_notes_Crypto_datas_CryptoDataId",
+                        column: x => x.CryptoDataId,
+                        principalSchema: "dbo",
+                        principalTable: "Crypto_datas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Crypto_data_notes_CryptoDataId",
+                schema: "dbo",
+                table: "Crypto_data_notes",
+                column: "CryptoDataId",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Crypto_data_notes",
+                schema: "dbo");
+
             migrationBuilder.DropTable(
                 name: "Crypto_datas",
                 schema: "dbo");

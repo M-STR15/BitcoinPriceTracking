@@ -28,7 +28,7 @@ namespace BitcoinPriceTracking.BE.DB.Infrastructure
 			});
 
 			services.AddScoped<Func<TContext>>(provider => () => provider.GetRequiredService<TContext>());
-			services.AddScoped<CoindeskRepositories<TContext>>();
+			services.AddScoped<ICoindeskRepository,CoindeskRepository<TContext>>();
 
 			return services;
 		}

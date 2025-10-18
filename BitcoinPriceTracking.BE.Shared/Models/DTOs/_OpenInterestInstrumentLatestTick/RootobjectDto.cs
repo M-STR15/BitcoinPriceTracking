@@ -1,10 +1,8 @@
-﻿using BitcoinPriceTracking.BE.Shared.Shared.DTOs;
-
-namespace BitcoinPriceTracking.BE.Shared.Models.DTOs
+﻿namespace BitcoinPriceTracking.BE.Shared.Models.DTOs
 {
-	public class RootobjectDto
+	public class RootobjectDTO
 	{
-		public Dictionary<string, CryptoDataDto> Data { get; set; }
-		public ErrDto Err { get; set; }
+		public Dictionary<string, CryptoDataBaseDTO> Data { get; set; }
+		public ErrDTO Err { get; set; }
 	}
 }

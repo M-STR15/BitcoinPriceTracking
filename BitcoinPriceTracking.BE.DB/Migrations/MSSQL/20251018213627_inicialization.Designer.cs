@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BitcoinPriceTracking.BE.DB.Migrations.MSSQL
 {
     [DbContext(typeof(MsSqlDbContext))]
-    [Migration("20251018211608_inicialization")]
+    [Migration("20251018213627_inicialization")]
     partial class inicialization
     {
         /// <inheritdoc />
@@ -27,8 +27,11 @@ namespace BitcoinPriceTracking.BE.DB.Migrations.MSSQL
 
             modelBuilder.Entity("BitcoinPriceTracking.BE.DB.Models.Entities.CryptoData", b =>
                 {
-                    b.Property<double>("Id")
-                        .HasColumnType("float");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("BASE")
                         .IsRequired()
@@ -790,6 +793,48 @@ namespace BitcoinPriceTracking.BE.DB.Migrations.MSSQL
                     b.HasKey("Id");
 
                     b.ToTable("Crypto_datas", "dbo");
+                });
+
+            modelBuilder.Entity("BitcoinPriceTracking.BE.DB.Models.Entities.CryptoDataNote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CryptoDataId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CryptoDataId")
+                        .IsUnique();
+
+                    b.ToTable("Crypto_data_notes", "dbo");
+                });
+
+            modelBuilder.Entity("BitcoinPriceTracking.BE.DB.Models.Entities.CryptoDataNote", b =>
+                {
+                    b.HasOne("BitcoinPriceTracking.BE.DB.Models.Entities.CryptoData", "CryptoData")
+                        .WithOne("CryptoDataNote")
+                        .HasForeignKey("BitcoinPriceTracking.BE.DB.Models.Entities.CryptoDataNote", "CryptoDataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CryptoData");
+                });
+
+            modelBuilder.Entity("BitcoinPriceTracking.BE.DB.Models.Entities.CryptoData", b =>
+                {
+                    b.Navigation("CryptoDataNote");
                 });
 #pragma warning restore 612, 618
         }
