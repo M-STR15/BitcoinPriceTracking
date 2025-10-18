@@ -1,6 +1,4 @@
-﻿using BitcoinPriceTracking.BE.DB.Models.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace BitcoinPriceTracking.BE.DB.DataAccess
 {
@@ -11,13 +9,8 @@ namespace BitcoinPriceTracking.BE.DB.DataAccess
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			_modelBuilder = modelBuilder;
-			//modelBuilder.Entity<CryptoData>().HasNoKey();
 
 			base.OnModelCreating(modelBuilder);
-
-			// insertDefaultValues_Activities();
-			// insertDefaultValues_TypeShifts();
-			// setSubModuleTable();
 		}
 	}
 }
