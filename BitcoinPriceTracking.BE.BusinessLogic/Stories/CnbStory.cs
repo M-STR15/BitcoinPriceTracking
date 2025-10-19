@@ -4,6 +4,6 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Stories
 {
 	public class CnbStory
 	{
-		public kurzy DailyRate { get; set; }
+		public kurzy? DailyRate { get; set; }
 	}
 }

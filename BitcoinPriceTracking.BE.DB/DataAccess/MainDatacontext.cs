@@ -14,6 +14,5 @@ namespace BitcoinPriceTracking.BE.DB.DataAccess
 		{
 
 		}
-
 	}
 }

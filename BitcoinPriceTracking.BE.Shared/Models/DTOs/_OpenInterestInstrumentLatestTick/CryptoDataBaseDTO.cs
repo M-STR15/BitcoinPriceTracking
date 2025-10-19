@@ -5,31 +5,31 @@ namespace BitcoinPriceTracking.BE.Shared.Models.DTOs
 	public class CryptoDataBaseDTO : ICryptoData
 	{
 		public int Id { get; set; }
-		public string TYPE { get; set; }
-		public string MARKET { get; set; }
-		public string INSTRUMENT { get; set; }
-		public string MAPPED_INSTRUMENT { get; set; }
-		public string BASE { get; set; }
-		public string QUOTE { get; set; }
+		public string TYPE { get; set; } = string.Empty;
+		public string MARKET { get; set; } = string.Empty;
+		public string INSTRUMENT { get; set; } = string.Empty;
+		public string MAPPED_INSTRUMENT { get; set; } = string.Empty;
+		public string BASE { get; set; } = string.Empty;
+		public string QUOTE { get; set; } = string.Empty;
 		public double BASE_ID { get; set; }
 		public double QUOTE_ID { get; set; }
-		public string TRANSFORM_FUNCTION { get; set; }
+		public string TRANSFORM_FUNCTION { get; set; } = string.Empty;
 		public double CCSEQ { get; set; }
 		public double PRICE { get; set; }
-		public string PRICE_FLAG { get; set; }
+		public string PRICE_FLAG { get; set; } = string.Empty;
 		public double PRICE_LAST_UPDATE_TS { get; set; }
 		public double PRICE_LAST_UPDATE_TS_NS { get; set; }
 		public double LAST_TRADE_QUANTITY { get; set; }
 		public double LAST_TRADE_QUOTE_QUANTITY { get; set; }
-		public string LAST_TRADE_ID { get; set; }
+		public string LAST_TRADE_ID { get; set; } = string.Empty;
 		public double LAST_TRADE_CCSEQ { get; set; }
-		public string LAST_TRADE_SIDE { get; set; }
+		public string LAST_TRADE_SIDE { get; set; } = string.Empty;
 		public double LAST_PROCESSED_TRADE_TS { get; set; }
 		public double LAST_PROCESSED_TRADE_TS_NS { get; set; }
 		public double LAST_PROCESSED_TRADE_PRICE { get; set; }
 		public double LAST_PROCESSED_TRADE_QUANTITY { get; set; }
 		public double LAST_PROCESSED_TRADE_QUOTE_QUANTITY { get; set; }
-		public string LAST_PROCESSED_TRADE_SIDE { get; set; }
+		public string LAST_PROCESSED_TRADE_SIDE { get; set; } = string.Empty;
 		public double LAST_PROCESSED_TRADE_CCSEQ { get; set; }
 		public double BEST_BID { get; set; }
 		public double BEST_BID_QUANTITY { get; set; }

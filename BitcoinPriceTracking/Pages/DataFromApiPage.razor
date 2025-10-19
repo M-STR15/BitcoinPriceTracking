@@ -127,7 +127,7 @@
 
     private async void addAddCryptoDataToDb_Click()
     {
-        if (_httpClient != null)
+        if (_httpClient != null && _cryptoDataDto != null)
         {
             var result = await _httpClient.PostAsJsonAsync<CryptoDataBaseDTO>("/api/v1/crypto-data", _cryptoDataDto);
         }

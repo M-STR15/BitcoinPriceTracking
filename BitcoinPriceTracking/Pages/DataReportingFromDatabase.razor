@@ -67,7 +67,7 @@
 
 @code {
     [Inject]
-    private IMapper _mapper { get; set; }
+    private IMapper _mapper { get; set; } = null!;
     private IEnumerable<CryptoDataReportMV>? _cryptoDataReportMv;
 
     private object? _labels;
