@@ -10,12 +10,24 @@
 }
 else
 {
-    <MDynamicTable Items="_cryptoDataNotesDTO" ColumnOrder="_columnOrder" />
+    <MDynamicTable Items="_cryptoDataNotesDTO" ColumnOrder="_columnOrder" ColumnWidths="_columnWidths" />
 }
 
 @code {
     private IEnumerable<CryptoDataNoteDTO>? _cryptoDataNotesDTO;
-    private List<string> _columnOrder = new List<string> { "Id", "TimeStamp", "Note", "CryptoData" };
+    private List<string> _columnOrder = new List<string>
+    {
+        nameof(CryptoDataNoteDTO.Id),
+        nameof(CryptoDataNoteDTO.TimeStamp),
+        nameof(CryptoDataNoteDTO.Note),
+        nameof(CryptoDataNoteDTO.CryptoData)
+    };
+    private Dictionary<string, string> _columnWidths = new Dictionary<string, string>
+    {
+        { nameof(CryptoDataNoteDTO.Id), "60px" },
+        { nameof(CryptoDataNoteDTO.TimeStamp), "200px" },
+        { nameof(CryptoDataNoteDTO.Note), "250px" }
+    };
 
     protected override async Task OnInitializedAsync()
     {

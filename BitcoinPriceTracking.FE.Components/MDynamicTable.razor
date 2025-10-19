@@ -20,7 +20,7 @@
                 {
                     var value = prop.GetValue(Item);
                     bool hasNested = value != null && (value.GetType().IsPrimitive || value is string || value is DateTime);
-
+                    string key = $"{Item.GetHashCode()}_{prop.Name}";
 
                     if (value is null)
                     {
@@ -55,7 +55,7 @@ else if (Items is not null)
             <tr>
                 @foreach (var prop in props)
                 {
-                    <th>@prop.Name</th>
+                    <th style="@getWidthStyle(prop.Name)">@prop.Name</th>
                 }
             </tr>
         </thead>
@@ -67,10 +67,11 @@ else if (Items is not null)
                     {
                         var value = prop.GetValue(item);
                         bool hasNested = value != null && (value.GetType().IsPrimitive || value is string || value is DateTime);
+                        string key = $"{item.GetHashCode()}_{prop.Name}";
 
                         if (value is null)
                         {
-                            <td>aaa</td>
+                            <td></td>
                         }
                         else if (hasNested)
                         {
@@ -81,11 +82,11 @@ else if (Items is not null)
                             <td>
                                 <div>
                                     <button class="btn btn-sm btn-outline-primary"
-                                            @onclick="@(() => toggle(prop.Name))">
-                                        @(isExpanded(prop.Name) ? "▼ Sbalit" : "▶ Rozbalit")
+                                            @onclick="@(() => toggle(key))">
+                                        @(isExpanded(key) ? "▼ Sbalit" : "▶ Rozbalit")
                                     </button>
 
-                                    @if (isExpanded(prop.Name))
+                                    @if (isExpanded(key))
                                     {
                                         <MTableForProperty Item="value" />
                                     }
@@ -103,6 +104,7 @@ else if (Items is not null)
     [Parameter] public T? Item { get; set; }
     [Parameter] public IEnumerable<T>? Items { get; set; }
     [Parameter] public List<string>? ColumnOrder { get; set; }
+    [Parameter] public Dictionary<string, string>? ColumnWidths { get; set; }
 
     private PropertyInfo[] GetPropertiesInOrder()
     {
@@ -128,5 +130,12 @@ else if (Items is not null)
     {
         if (!_expanded.Add(key))
             _expanded.Remove(key);
+    }
+
+    private string getWidthStyle(string propName)
+    {
+        if (ColumnWidths != null && ColumnWidths.TryGetValue(propName, out var width))
+            return $"width:{width};";
+        return "";
     }
 }
