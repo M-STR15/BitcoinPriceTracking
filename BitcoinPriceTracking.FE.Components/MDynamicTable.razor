@@ -10,7 +10,19 @@
             <tr>
                 @foreach (var prop in props)
                 {
-                    <th>@prop.Name</th>
+                    @if (IsSortable(prop))
+                    {
+                        <th style="@getWidthStyle(prop.Name)">
+                            <button class="btn btn-sm btn-link p-0" @onclick="@(() => ToggleSort(prop.Name))">
+                                @prop.Name
+                                @(SortColumn == prop.Name ? (SortAscending ? "▲" : "▼") : "")
+                            </button>
+                        </th>
+                    }
+                    else
+                    {
+                        <th>@prop.Name</th>
+                    }
                 }
                 @if (IsButtonSave || IsButtonDelete)
                 {
@@ -23,24 +35,30 @@
                 @foreach (var prop in props)
                 {
                     var value = prop.GetValue(Item);
-                    bool hasNested = value != null && (value.GetType().IsPrimitive || value is string || value is DateTime);
+                    bool hasNested = value != null && !(value.GetType().IsPrimitive || value is string || value is DateTime);
                     string key = $"{Item.GetHashCode()}_{prop.Name}";
 
                     if (value is null)
                     {
                         <td></td>
                     }
-                    else if (hasNested)
+                    else if (!hasNested)
                     {
                         <td>@value</td>
                     }
                     else
                     {
                         <td>
-                            @if (value is System.Collections.IEnumerable enumerable)
-                            {
-                                <MTableForProperty Item="value" />
-                            }
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary" @onclick="@(() => toggle(key))">
+                                    @(isExpanded(key) ? "▼ Sbalit" : "▶ Rozbalit")
+                                </button>
+
+                                @if (isExpanded(key))
+                                {
+                                    <MTableForProperty Item="value" ColumnOrder="ColumnOrder" ColumnWidths="ColumnWidths" />
+                                }
+                            </div>
                         </td>
                     }
                 }
@@ -50,7 +68,7 @@
                     <td>
                         @if (IsButtonSave)
                         {
-                            <button class="btn btn-sm btn-success me-1" @onclick="@(() => OnSaveClicked(Item))">Edit</button>
+                            <button class="btn btn-sm btn-success me-1" @onclick="@(() => OnSaveClicked(Item))">Save</button>
                         }
                         @if (IsButtonDelete)
                         {
@@ -71,29 +89,38 @@ else if (Items is not null)
             <tr>
                 @foreach (var prop in props)
                 {
-                    <th style="@getWidthStyle(prop.Name)">@prop.Name</th>
+                    <th style="@getWidthStyle(prop.Name)">
+                        <button class="btn btn-sm btn-link p-0" @onclick="@(() => ToggleSort(prop.Name))">
+                            @prop.Name
+                            @(SortColumn == prop.Name ? (SortAscending ? "▲" : "▼") : "")
+                        </button>
+                    </th>
                 }
                 @if (IsButtonSave || IsButtonDelete)
                 {
-                    <th>Akce</th>
+                    <th>
+                        <button class="btn btn-sm btn-link p-0">
+                            Akce
+                        </button>
+                    </th>
                 }
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Items)
+            @foreach (var item in ApplySortingAndFiltering(Items, props))
             {
                 <tr>
                     @foreach (var prop in props)
                     {
                         var value = prop.GetValue(item);
-                        bool hasNested = value != null && (value.GetType().IsPrimitive || value is string || value is DateTime);
+                        bool hasNested = value != null && !(value.GetType().IsPrimitive || value is string || value is DateTime);
                         string key = $"{item.GetHashCode()}_{prop.Name}";
 
                         if (value is null)
                         {
                             <td></td>
                         }
-                        else if (hasNested)
+                        else if (!hasNested)
                         {
                             <td>@value</td>
                         }
@@ -101,8 +128,7 @@ else if (Items is not null)
                         {
                             <td>
                                 <div>
-                                    <button class="btn btn-sm btn-outline-primary"
-                                            @onclick="@(() => toggle(key))">
+                                    <button class="btn btn-sm btn-outline-primary" @onclick="@(() => toggle(key))">
                                         @(isExpanded(key) ? "▼ Sbalit" : "▶ Rozbalit")
                                     </button>
 
@@ -141,9 +167,12 @@ else if (Items is not null)
     [Parameter] public Dictionary<string, string>? ColumnWidths { get; set; }
     [Parameter] public bool IsButtonSave { get; set; }
     [Parameter] public bool IsButtonDelete { get; set; }
-
     [Parameter] public EventCallback<T> OnSave { get; set; }
     [Parameter] public EventCallback<T> OnDelete { get; set; }
+
+    [Parameter] public string? SortColumn { get; set; }
+    [Parameter] public bool SortAscending { get; set; } = true;
+    [Parameter] public Dictionary<string, Func<object, bool>>? Filters { get; set; }
 
     private PropertyInfo[] GetPropertiesInOrder()
     {
@@ -152,22 +181,25 @@ else if (Items is not null)
         if (ColumnOrder == null || ColumnOrder.Count == 0)
             return allProps;
 
-        var ordered = ColumnOrder
-            .Select(name => allProps.FirstOrDefault(p => p.Name == name))
-            .Where(p => p != null)
-            .Cast<PropertyInfo>()
-            .ToArray();
-
-        return ordered;
+        return ColumnOrder
+        .Select(name => allProps.FirstOrDefault(p => p.Name == name))
+        .Where(p => p != null)
+        .Cast<PropertyInfo>()
+        .ToArray();
     }
 
     private HashSet<string> _expanded = new();
     private bool isExpanded(string key) => _expanded.Contains(key);
-
     private void toggle(string key)
     {
         if (!_expanded.Add(key))
             _expanded.Remove(key);
+    }
+
+    private bool IsSortable(PropertyInfo prop)
+    {
+        var type = prop.PropertyType;
+        return type.IsPrimitive || type == typeof(string) || type == typeof(DateTime) || type == typeof(decimal);
     }
 
     private string getWidthStyle(string propName)
@@ -188,4 +220,50 @@ else if (Items is not null)
         if (OnDelete.HasDelegate)
             await OnDelete.InvokeAsync(item);
     }
-}
+
+    private void ToggleSort(string column)
+    {
+        var prop = GetPropertiesInOrder().FirstOrDefault(p => p.Name == column);
+        if (prop == null || !IsSortable(prop))
+            return; // ignoruj nestorovatelné sloupce
+
+        if (SortColumn == column)
+            SortAscending = !SortAscending;
+        else
+        {
+            SortColumn = column;
+            SortAscending = true;
+        }
+    }
+
+    private IEnumerable<T> ApplySortingAndFiltering(IEnumerable<T>? items, PropertyInfo[] props)
+    {
+        if (items == null)
+            return Enumerable.Empty<T>();
+
+        var result = items;
+
+        // Filtrování podle viditelných sloupců
+        if (Filters != null && Filters.Any())
+        {
+            foreach (var filter in Filters)
+            {
+                var prop = props.FirstOrDefault(p => p.Name == filter.Key);
+                if (prop != null)
+                    result = result.Where(item => filter.Value(prop.GetValue(item)!));
+            }
+        }
+
+        // Řazení podle viditelných sloupců
+        if (!string.IsNullOrEmpty(SortColumn))
+        {
+            var prop = props.FirstOrDefault(p => p.Name == SortColumn);
+            if (prop != null)
+                result = SortAscending
+                ? result.OrderBy(item => prop.GetValue(item))
+                : result.OrderByDescending(item => prop.GetValue(item));
+        }
+
+        return result;
+    }
+                        }
