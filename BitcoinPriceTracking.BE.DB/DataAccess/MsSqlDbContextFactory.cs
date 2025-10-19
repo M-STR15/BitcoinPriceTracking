@@ -21,7 +21,7 @@ namespace BitcoinPriceTracking.BE.DB.DataAccess
 			// fallback, pokud configuration selže
 			if (string.IsNullOrEmpty(connectionString))
 			{
-				connectionString = @"Server=DESKTOP-JS0N1LD\SQLEXPRESS;Database=BitcoinPriceTracking;Trusted_Connection=True;TrustServerCertificate=True;";
+				connectionString = @"Server=.;Database=BitcoinPriceTracking;Trusted_Connection=True;TrustServerCertificate=True;";
 			}
 
 			var optionsBuilder = new DbContextOptionsBuilder<MsSqlDbContext>();

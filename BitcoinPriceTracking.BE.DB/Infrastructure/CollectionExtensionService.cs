@@ -30,6 +30,21 @@ namespace BitcoinPriceTracking.BE.DB.Infrastructure
 			services.AddScoped<Func<TContext>>(provider => () => provider.GetRequiredService<TContext>());
 			services.AddScoped<ICoindeskRepository,CoindeskRepository<TContext>>();
 
+			// Automatické vytvoření databáze
+			using (var serviceProvider = services.BuildServiceProvider())
+			using (var scope = serviceProvider.CreateScope())
+			{
+				var dbContext = scope.ServiceProvider.GetRequiredService<TContext>();
+				try
+				{
+					dbContext.Database.Migrate();
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine($"Chyba při migraci databáze: {ex.Message}");
+				}
+			}
+
 			return services;
 		}
 	}
