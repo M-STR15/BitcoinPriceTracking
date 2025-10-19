@@ -31,19 +31,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await loadDataCryptoDataNotesAsync();
-    }
-
-    private async Task loadDataCryptoDataNotesAsync()
-    {
-        if (_httpClient != null)
-        {
-            var response = await _httpClient.GetAsync("api/v1/crypto-data-note");
-
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                _cryptoDataNotesDTO = await response.Content.ReadFromJsonAsync<IEnumerable<CryptoDataNoteDTO>>();
-            }
-        }
+        _cryptoDataNotesDTO = await loadData<IEnumerable<CryptoDataNoteDTO>>("api/v1/crypto-data-note");
     }
 }

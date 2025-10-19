@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BitcoinPriceTracking.BE.BusinessLogic.Stories;
-using BitcoinPriceTracking.BE.DB.Models.Entities;
 using BitcoinPriceTracking.BE.DB.Repositories;
 using BitcoinPriceTracking.BE.Shared.Models.DTOs;
 using BitcoinPriceTracking.BE.Shared.Services;

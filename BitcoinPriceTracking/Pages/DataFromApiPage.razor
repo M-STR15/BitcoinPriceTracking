@@ -14,18 +14,18 @@
 
 <style>
     .tabs button {
-    padding: 10px 20px;
-    margin-right: 5px;
-    cursor: pointer;
+        padding: 10px 20px;
+        margin-right: 5px;
+        cursor: pointer;
     }
 
     .active-tab {
-    background-color: #007bff;
-    color: white;
+        background-color: #007bff;
+        color: white;
     }
 
     .tab-content {
-    margin-top: 20px;
+        margin-top: 20px;
     }
 </style>
 
@@ -54,7 +54,7 @@
     }
     else if (selectedTab == eTab.CnbData)
     {
-        <p>Zobrazuje surová data z </p>
+        <p>Zobrazuje surová data z https://www.cnb.cz//cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.xml</p>
         @if (_cnbDataDto == null)
         {
             <p><em>Loading...</em></p>
@@ -79,35 +79,14 @@
     {
         try
         {
-            await loadDataCryptoData();
-            await loadDataCnbData();
+
+            _cryptoDataDto = await loadData<CryptoDataBaseDTO>("api/v1/crypto-data/buffer/BTC-EUC");
+            _cnbDataDto = await loadData<kurzy>("api/v1/cnb-data/buffer");
             StateHasChanged();
         }
         catch (Exception ex)
         {
             var test = ex;
-        }
-    }
-
-    private async Task loadDataCryptoData()
-    {
-        if (_httpClient != null)
-        {
-            var response = await _httpClient.GetAsync("api/v1/crypto-data/buffer/BTC-EUC");
-
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                _cryptoDataDto = await response.Content.ReadFromJsonAsync<CryptoDataBaseDTO>();
-        }
-    }
-
-    private async Task loadDataCnbData()
-    {
-        if (_httpClient != null)
-        {
-            var response = await _httpClient.GetAsync("api/v1/cnb-data/buffer");
-
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                _cnbDataDto = await response.Content.ReadFromJsonAsync<kurzy>();
         }
     }
 

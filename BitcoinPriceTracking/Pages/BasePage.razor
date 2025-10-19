@@ -19,4 +19,18 @@
             _eventLogService?.LogError(Guid.Parse("24cd2c19-6a7f-48b3-9533-e7981d87b63e"), ex);
         }
     }
+
+    protected virtual async Task<T?> loadData<T>(string urlApi)
+    {
+        if (_httpClient != null)
+        {
+            var response = await _httpClient.GetAsync(urlApi);
+
+            if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<T>();
+            }
+        }
+        return default;
+    }
 }
