@@ -28,23 +28,28 @@
     public string QueryText { get; set; } = string.Empty;
 
     [Parameter]
-    public bool ResultQuery { get; set; }
+    public ResultQueryModel ResultQueryModel { get; set; }
     [Parameter]
-    public EventCallback<bool> ResultQueryChanged { get; set; }
+    public EventCallback<ResultQueryModel> ResultQueryModelChanged { get; set; }
+    [Parameter]
+    public EventCallback ResultQueryChanged { get; set; }
 
     public void onResponseYesClick()
     {
-        ResultQuery = true;
+        ResultQueryModel.ResultQuery = true;
+
         Visible = false;
 
-        ResultQueryChanged.InvokeAsync(ResultQuery);
+        ResultQueryChanged.InvokeAsync();
     }
 
     public void onResponseNoClick()
     {
-        ResultQuery = false;
+        ResultQueryModel.ResultQuery = false;
+        ResultQueryModel.Model = null;
+
         Visible = false;
 
-        ResultQueryChanged.InvokeAsync(ResultQuery);
+        ResultQueryChanged.InvokeAsync();
     }
 }

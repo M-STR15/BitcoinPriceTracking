@@ -1,6 +1,8 @@
 ﻿@page "/data-from-database"
 @using BitcoinPriceTracking.BE.Shared.Models.DTOs
 @using BitcoinPriceTracking.FE.Components
+@using BitcoinPriceTracking.Modals
+@using BitcoinPriceTracking.Modals.Models
 
 @inherits BasePage
 
@@ -19,7 +21,15 @@ else
                    OnDelete="HandleDelete" />
 }
 
+<QueryYesNoModal Title="Query"
+                 QueryText="Chcete smazat záznam?"
+                 ResultQueryChanged="onAfterCloseDeleteQueryResult"
+                 @bind-ResultQueryModel="_resultQueryModel"
+                 @bind-Visible="_isOpenDeleteQueryModal" />
+
 @code {
+    private bool _isOpenDeleteQueryModal = false;
+    private ResultQueryModel _resultQueryModel;
     private IEnumerable<CryptoDataNoteDTO>? _cryptoDataNotesDTO;
     private List<string> _columnOrder = new List<string>
     {
@@ -47,16 +57,35 @@ else
 
     private async void HandleDelete(CryptoDataNoteDTO cryptoDataNoteDTO)
     {
-        if (_httpClient != null)
-        {
-            string urlApi = "api/v1/crypto-data-note/" + cryptoDataNoteDTO.Id;
-            var response = await _httpClient.DeleteAsync(urlApi);
-
-            if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK)
+        _resultQueryModel = new ResultQueryModel()
             {
-                _cryptoDataNotesDTO = await loadData<IEnumerable<CryptoDataNoteDTO>>("api/v1/crypto-data-note");
-                StateHasChanged();
+                Model = cryptoDataNoteDTO
+            };
+        _isOpenDeleteQueryModal = true;
+    }
+
+    private async Task onAfterCloseDeleteQueryResult()
+    {
+        try
+        {
+            var resultQuery = _resultQueryModel.ResultQuery;
+            var existModel = _resultQueryModel.Model != null;
+            if (resultQuery && _httpClient != null && existModel)
+            {
+                var cryptoDataNoteId = ((CryptoDataNoteDTO)_resultQueryModel.Model).Id;
+                string urlApi = "api/v1/crypto-data-note/" + cryptoDataNoteId;
+                var response = await _httpClient.DeleteAsync(urlApi);
+
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    _cryptoDataNotesDTO = await loadData<IEnumerable<CryptoDataNoteDTO>>("api/v1/crypto-data-note");
+                    StateHasChanged();
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            _eventLogService?.LogError(Guid.Parse("18f5f853-7b0d-4525-868f-323b2e74de47"), ex);
         }
     }
 }
