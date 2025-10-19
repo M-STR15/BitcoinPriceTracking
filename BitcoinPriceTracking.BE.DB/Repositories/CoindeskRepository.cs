@@ -82,15 +82,18 @@ namespace BitcoinPriceTracking.BE.DB.Repositories
 			}
 		}
 
-		public async Task<bool> DeleteCryptoDataNoteAsync(int cryptoDataNoteId)
+		public async Task<bool> DeleteCryptoDataAsync(int cryptoDataId)
 		{
 			try
 			{
 				var context = _contextFactory();
-				var removedData = context.CryptoDataNotes.Find(cryptoDataNoteId);
-				if (removedData != null)
+				var removedCryptoData = context.CryptoDatas.Find(cryptoDataId);
+				var removedCryptoDataNote = context.CryptoDataNotes.FirstOrDefault(x => x.CryptoDataId == removedCryptoData.Id);
+
+				if (removedCryptoDataNote != null && removedCryptoData != null)
 				{
-					context.CryptoDataNotes.Remove(removedData);
+					context.CryptoDataNotes.Remove(removedCryptoDataNote);
+					context.CryptoDatas.Remove(removedCryptoData);
 					await context.SaveChangesAsync();
 
 					return true;

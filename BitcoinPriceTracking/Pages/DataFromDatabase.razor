@@ -72,8 +72,8 @@ else
             var existModel = _resultQueryModel.Model != null;
             if (resultQuery && _httpClient != null && existModel)
             {
-                var cryptoDataNoteId = ((CryptoDataNoteDTO)_resultQueryModel.Model).Id;
-                string urlApi = "api/v1/crypto-data-note/" + cryptoDataNoteId;
+                var cryptoDataId = ((CryptoDataNoteDTO)_resultQueryModel.Model).CryptoDataId;
+                string urlApi = "api/v1/crypto-data/" + cryptoDataId;
                 var response = await _httpClient.DeleteAsync(urlApi);
 
                 if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK)

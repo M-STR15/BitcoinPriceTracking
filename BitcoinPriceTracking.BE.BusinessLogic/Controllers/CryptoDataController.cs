@@ -22,13 +22,16 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 
 		#region GET
 		/// <summary>
-		/// Získá aktuální data o kryptoměně BTC vůči EUR.
+		/// Získá aktuální data o Bitcoinu z bufferu (BTC-EUR).
 		/// </summary>
 		/// <remarks>
-		/// Vrací nejnovější dostupná data o Bitcoinu vůči euru. Pokud nejsou data dostupná, vrací 404.
+		/// Vrací data z interního bufferu, která nemusí být nejnovějšími daty z databáze.
+		/// Pokud nejsou data dostupná, vrací 404 Not Found.
 		/// </remarks>
 		/// <returns>
-		/// 200 OK s <see cref="CryptoDataBaseDto"/> pokud jsou data dostupná, 404 Not Found pokud nejsou, nebo 500 Internal Server Error při výjimce.
+		/// 200 OK s <see cref="CryptoDataBaseDTO"/> pokud jsou data dostupná,
+		/// 404 Not Found pokud nejsou,
+		/// nebo 500 Internal Server Error při výjimce.
 		/// </returns>
 		[HttpGet("api/v1/crypto-data/buffer/BTC-EUC")]
 		public async Task<ActionResult<CryptoDataBaseDTO>> GetCryptoDataFromBufferAsync()
@@ -49,6 +52,15 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 			}
 		}
 
+		/// <summary>
+		/// Získá poslední záznam o kryptoměně z databáze.
+		/// </summary>
+		/// <remarks>
+		/// Vrací nejnovější dostupná data o Bitcoinu z databáze. Pokud nejsou data dostupná, vrací 404.
+		/// </remarks>
+		/// <returns>
+		/// 200 OK s <see cref="CryptoDataBaseDTO"/> pokud jsou data dostupná, 404 Not Found pokud nejsou, nebo 500 Internal Server Error při výjimce.
+		/// </returns>
 		[HttpGet("api/v1/crypto-data/last-record")]
 		public async Task<ActionResult<CryptoDataBaseDTO>> GetCryptoDataFromDatabaseAsync()
 		{
@@ -68,6 +80,18 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 			}
 		}
 
+		/// <summary>
+		/// Získá všechny poznámky ke kryptoměnovým datům z databáze.
+		/// </summary>
+		/// <remarks>
+		/// Vrací kolekci poznámek ke kryptoměnovým datům. Pokud nejsou poznámky dostupné, vrací 404 Not Found.
+		/// V případě chyby serveru vrací 500 Internal Server Error.
+		/// </remarks>
+		/// <returns>
+		/// 200 OK s kolekcí <see cref="CryptoDataNoteDTO"/> pokud jsou poznámky dostupné,
+		/// 404 Not Found pokud nejsou,
+		/// nebo 500 Internal Server Error při výjimce.
+		/// </returns>
 		[HttpGet("api/v1/crypto-data-note")]
 		public async Task<ActionResult<IEnumerable<CryptoDataNoteDTO>>> GetCryptoDataNoteFromDatabaseAsync()
 		{
@@ -90,7 +114,15 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		#endregion GET
 
 		#region POST
-
+		/// <summary>
+		/// Přidá nová data o kryptoměně do databáze.
+		/// </summary>
+		/// <param name="cryptoDataDto">DTO objekt s daty o kryptoměně.</param>
+		/// <returns>
+		/// 200 OK s <see cref="CryptoDataBaseDTO"/> pokud byla data úspěšně přidána,
+		/// 400 Bad Request pokud je vstup neplatný,
+		/// nebo 500 Internal Server Error při výjimce.
+		/// </returns>
 		[HttpPost("api/v1/crypto-data")]
 		public async Task<ActionResult<CryptoDataBaseDTO>> AddCryptoDataAsync([FromBody] CryptoDataBaseDTO cryptoDataDto)
 		{
@@ -118,6 +150,15 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		#endregion POST
 
 		#region PUT
+		/// <summary>
+		/// Uloží upravená data o kryptoměně do databáze.
+		/// </summary>
+		/// <param name="cryptoDataDto">DTO objekt s upravenými daty o kryptoměně.</param>
+		/// <returns>
+		/// 200 OK s <see cref="CryptoDataBaseDTO"/> pokud byla data úspěšně uložena,
+		/// 400 Bad Request pokud je vstup neplatný,
+		/// nebo 500 Internal Server Error při výjimce.
+		/// </returns>
 		[HttpPut("api/v1/crypto-data")]
 		public async Task<ActionResult<CryptoDataBaseDTO>> SaveCryptoDataAsync([FromBody] CryptoDataBaseDTO cryptoDataDto)
 		{
@@ -151,12 +192,20 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		#endregion PUT
 
 		#region DELETE
-		[HttpDelete("api/v1/crypto-data-note/{cryptoDataNoteId}")]
-		public async Task<IActionResult> DeleteCryptoDataNoteAsync(int cryptoDataNoteId)
+		/// <summary>
+		/// Smaže záznam o kryptoměně podle zadaného ID.
+		/// </summary>
+		/// <param name="cryptoDataId">ID záznamu kryptoměny, který má být smazán.</param>
+		/// <returns>
+		/// 200 OK pokud byl záznam úspěšně smazán,
+		/// nebo 500 Internal Server Error při chybě.
+		/// </returns>
+		[HttpDelete("api/v1/crypto-data/{cryptoDataId}")]
+		public async Task<IActionResult> DeleteCryptoDataAsync(int cryptoDataId)
 		{
 			try
 			{
-				var result = await _coindeskRepositories.DeleteCryptoDataNoteAsync(cryptoDataNoteId);
+				var result = await _coindeskRepositories.DeleteCryptoDataAsync(cryptoDataId);
 				return result ? Ok() : Problem();
 			}
 			catch (Exception ex)
@@ -165,6 +214,6 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 			}
 		}
-		#endregion
+		#endregion DELETE
 	}
 }
