@@ -3,6 +3,7 @@
 	public enum eTabDataFromApi
 	{
 		CryptoData,
-		CnbData
+		CnbData,
+		CryptoDataToCzk
 	}
 }
