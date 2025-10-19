@@ -2,6 +2,7 @@ using BitcoinPriceTracking.BE.BusinessLogic.Infrastructure;
 using BitcoinPriceTracking.BE.DB.DataAccess;
 using BitcoinPriceTracking.BE.Shared.Infrastructure;
 using BitcoinPriceTracking.Data;
+using BitcoinPriceTracking.MappingProfiles;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,8 @@ builder.Services.AddHttpClient("ApiCNBClient", (sp, client) =>
 builder.Services.AddControllers();
 builder.Services.AddBitcoinPriceTrackingBeSharedServices();
 builder.Services.AddBitcoinPriceTrackingBeBusinessLogicServices<MsSqlDbContext>();
+
+builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
 
 // Add services to the container.
 builder.Services.AddRazorPages();

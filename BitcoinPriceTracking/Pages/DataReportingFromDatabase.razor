@@ -1,0 +1,47 @@
+﻿@page "/Reporting-from-database"
+@using AutoMapper
+@using BitcoinPriceTracking.BE.Shared.Models.DTOs
+@using BitcoinPriceTracking.FE.Components
+@using BitcoinPriceTracking.Models.MVs
+
+@inherits BasePage
+
+@if (_cryptoDataReportMv == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <MDynamicTable T="CryptoDataReportMV"
+                    Items="_cryptoDataReportMv"
+                    ColumnOrder="_columnOrder"
+                    ColumnWidths="_columnWidths" />
+}
+
+@code {
+    [Inject]
+    private IMapper _mapper { get; set; }
+    private IEnumerable<CryptoDataReportMV>? _cryptoDataReportMv;
+    private List<string> _columnOrder = new List<string>
+    {
+        nameof(CryptoDataReportMV.CryptoDataId),
+        nameof(CryptoDataReportMV.TimeStamp),
+        nameof(CryptoDataReportMV.Note),
+        nameof(CryptoDataReportMV.PRICE)
+    };
+    private Dictionary<string, string> _columnWidths = new Dictionary<string, string>
+    {
+        { nameof(CryptoDataReportMV.CryptoDataId), "60px" },
+        { nameof(CryptoDataReportMV.TimeStamp), "200px" },
+        { nameof(CryptoDataReportMV.Note), "250px" },
+        { nameof(CryptoDataReportMV.PRICE), "250px" }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        var cryptoDataNotesDTO = await loadData<IEnumerable<CryptoDataNoteDTO>>("api/v1/crypto-data-note");
+        _cryptoDataReportMv = _mapper.Map<IEnumerable<CryptoDataReportMV>>(cryptoDataNotesDTO);
+
+    }
+
+}
