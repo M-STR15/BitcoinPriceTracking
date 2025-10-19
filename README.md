@@ -116,4 +116,5 @@ Dodatečné info
 
 ### 0.0.1   (2025-10-19)
 - 🚀 vytvořené základní funkcionality aplikace dle požadavku projektu
-    - jenom je potřeba dodělat změnu poznámek k zánamu 
+    - jenom je potřeba dodělat změnu poznámek k zánamu ([#15-Uložit změny poznámek k záznamu
+](https://github.com/M-STR15/BitcoinPriceTracking/issues/15))
