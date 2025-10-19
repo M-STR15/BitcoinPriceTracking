@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using BitcoinPriceTracking.FE.Components
+@inherits LayoutComponentBase
 
 <PageTitle>BitcoinPriceTracking</PageTitle>
 
@@ -12,6 +13,7 @@
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
 
+        <MToastComponent />
         <article class="content px-4">
             @Body
         </article>

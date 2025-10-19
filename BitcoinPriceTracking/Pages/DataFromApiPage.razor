@@ -7,6 +7,7 @@
 @using BitcoinPriceTracking.Enums
 @using BitcoinPriceTracking.FE.Components
 @using System.Net.Http.Json
+@using BitcoinPriceTracking.FE.Components.Models
 @using BitcoinPriceTracking.Models.MVs
 
  @inherits BasePage
@@ -16,18 +17,18 @@
 
 <style>
     .tabs button {
-        padding: 10px 20px;
-        margin-right: 5px;
-        cursor: pointer;
+    padding: 10px 20px;
+    margin-right: 5px;
+    cursor: pointer;
     }
 
     .active-tab {
-        background-color: #007bff;
-        color: white;
+    background-color: #007bff;
+    color: white;
     }
 
     .tab-content {
-        margin-top: 20px;
+    margin-top: 20px;
     }
 </style>
 
@@ -50,7 +51,7 @@
         <button @onclick="addAddCryptoDataToDb_Click">Add actual data to database</button>
         @if (_cryptoDataDto == null)
         {
-            <p><em>Loading...</em></p>
+            <p><em><MLoader /></em></p>
         }
         else
         {
@@ -62,7 +63,7 @@
         <p>Zobrazuje surová data z https://www.cnb.cz//cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.xml</p>
         @if (_cnbDataDto == null)
         {
-            <p><em>Loading...</em></p>
+            <p><em><MLoader/></em></p>
         }
         else
         {
@@ -74,7 +75,7 @@
         <p>Zobrazuje převedení crypto dat do CZK</p>
         @if (_cryptoDataConvertDto == null)
         {
-            <p><em>Loading...</em></p>
+            <p><em><MLoader /></em></p>
         }
         else
         {
@@ -130,6 +131,10 @@
         if (_httpClient != null && _cryptoDataDto != null)
         {
             var result = await _httpClient.PostAsJsonAsync<CryptoDataBaseDTO>("/api/v1/crypto-data", _cryptoDataDto);
+            if (result.StatusCode==System.Net.HttpStatusCode.OK)
+                _toastNotificationService?.AddNotification(eNotificationType.Success, "Success", "Data byla uložena.");
+            else
+                _toastNotificationService?.AddNotification(eNotificationType.Warning, "Warning", "Data se nepovedlo uložit.");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿@using BitcoinPriceTracking.BE.Shared.Services
+@using BitcoinPriceTracking.FE.Components.Services
 
 @code {
     protected HttpClient? _httpClient;
@@ -6,6 +7,8 @@
     protected IEventLogService? _eventLogService { get; set; }
     [Inject]
     private IHttpClientFactory? _httpClientFactory { get; set; }
+    [Inject]
+    protected ToastNotificationService? _toastNotificationService { get; set; }
 
     protected override void OnInitialized()
     {

@@ -1,0 +1,10 @@
+﻿@using BitcoinPriceTracking.FE.Components.Services
+@using TimeTracker.FE.Web.Components.Models
+@inject ToastNotificationService _notificationService
+
+<div class="toast-container-custom">
+    @foreach (var notification in _notificationService.Notifications)
+    {
+        <MToast Notification="@notification" />
+    }
+</div>
