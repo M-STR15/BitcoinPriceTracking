@@ -9,7 +9,7 @@ Aplikace slouží k načítání dat z API:
   
     - tyto data se v BUFFEru aktualizují jednou za den
  
-Tyto data je poté možné uložit či zobrazit. 
+Tyto data je poté možné zobrazit a uložit. 
 
 
 ## Authors
@@ -57,6 +57,7 @@ Tyto data je poté možné uložit či zobrazit.
 
 - Databáze:
     - Microsoft SQL Server
+        - je vytvořená methodou Code first pomocí EF Core -> migračních balíčků
 
 - Architektura:
     - Aplikace je psaná architekturou MVC
@@ -110,7 +111,7 @@ Dodatečné info
 - ⚠ – Důležitá -> ovlivňující mnoho uživatelů
 - 🛑 – Zásadní
 - 🚨 – Bezpečnostní
-- ***
+
 
 ***
 ### 0.2.0   (2025-10-20)
