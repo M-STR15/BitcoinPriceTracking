@@ -81,7 +81,7 @@ Tyto data je poté možné zobrazit a uložit.
     - Aplikace je vytvořena tak, aby v případě existence MS SQL serveru na lokálním počítači, tak se aplikace spustí bez dalších úprav. Pokud má uživatel přístup(možnost upravovat) do lokální databáze, tak se mu vytvoří databáze a tabulky automaticky při prvním spuštění aplikace.
     - Aplikaci stačí sputit buď přes F5 nebo Ctrl+F5.
     
-## Popis aplikace
+## Poznámky k aplikaci
    - aplikace vznikla za pomocí ORM pomocí EF, kde jsou vytvořený migrační balíčky pro vytvoření databáze a tabulek
         - ConnectString pro vytváření migračních balíčků je nastavený MsSqlDbContextFactory, pokud by bylo potřeba vytvořit jiný migrační balíček, tak bude potřeba upravit connectstring
     - v appsettings.json-> ConnectionStringsMSSQL je nastavený připojovací řetězec k databázi, aktuálně je nastavený na ServerName=., tím by měl být připojený na lokální instanci SQL serveru
