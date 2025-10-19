@@ -113,6 +113,10 @@ Dodatečné info
 - ***
 
 ***
+### 0.2.0   (2025-10-20)
+- 🚀 přidání nové zobracování loaderu při načítání dat
+- 🚀 přidáno zobrazení toast notifikací při úspěšném či neúspěšném uložení dat
+***
 ### 0.1.0   (2025-10-19)
 - 🚀 přidání sortování a filtrování v tabulkách
 - 🚀 zobrazování verzovacího čísta aplikace
