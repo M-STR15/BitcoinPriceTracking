@@ -76,7 +76,7 @@ Tyto data je poté možné uložit či zobrazit.
 
 ## Nasazení
 
--Spuštění přes vývojové prostředí VS2022
+- Spuštění přes vývojové prostředí VS2022
     - aplikace vznikla za pomocí ORM pomocí EF, kde jsou vytvořený migrační balíčky pro vytvoření databáze a tabulek
         - ConnectString pro vytváření migračních balíčků je nastavený MsSqlDbContextFactory, pokud bybylo potřeba vytvořit jiný migrační balíček, tak bude potřerba upravit connectstring
     - v appsettings.json-> ConnectionStringsMSSQL je nastavený připojovací řetězec k databázi, aktuálně je nastavený na ServerName=., tím by měl být připojený na lokální instanci SQL serveru
