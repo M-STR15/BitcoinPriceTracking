@@ -10,7 +10,13 @@
 }
 else
 {
-    <MDynamicTable Items="_cryptoDataNotesDTO" ColumnOrder="_columnOrder" ColumnWidths="_columnWidths" />
+    <MDynamicTable T="CryptoDataNoteDTO"
+                   Items="_cryptoDataNotesDTO"
+                   ColumnOrder="_columnOrder"
+                   ColumnWidths="_columnWidths"
+                   IsButtonSave=true IsButtonDelete=true
+                   OnSave="HandleSave"
+                   OnDelete="HandleDelete" />
 }
 
 @code {
@@ -32,5 +38,25 @@ else
     protected override async Task OnInitializedAsync()
     {
         _cryptoDataNotesDTO = await loadData<IEnumerable<CryptoDataNoteDTO>>("api/v1/crypto-data-note");
+    }
+
+    private void HandleSave(CryptoDataNoteDTO cryptoDataNoteDTO)
+    {
+
+    }
+
+    private async void HandleDelete(CryptoDataNoteDTO cryptoDataNoteDTO)
+    {
+        if (_httpClient != null)
+        {
+            string urlApi = "api/v1/crypto-data-note/" + cryptoDataNoteDTO.Id;
+            var response = await _httpClient.DeleteAsync(urlApi);
+
+            if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                _cryptoDataNotesDTO = await loadData<IEnumerable<CryptoDataNoteDTO>>("api/v1/crypto-data-note");
+                StateHasChanged();
+            }
+        }
     }
 }

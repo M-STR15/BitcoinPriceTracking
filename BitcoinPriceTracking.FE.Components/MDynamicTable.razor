@@ -12,6 +12,10 @@
                 {
                     <th>@prop.Name</th>
                 }
+                @if (IsButtonSave || IsButtonDelete)
+                {
+                    <th>Akce</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -28,12 +32,10 @@
                     }
                     else if (hasNested)
                     {
-                        // Normální hodnota (string, číslo, datum, apod.)
                         <td>@value</td>
                     }
                     else
                     {
-                        // Kolekce (např. List<T>)
                         <td>
                             @if (value is System.Collections.IEnumerable enumerable)
                             {
@@ -41,6 +43,20 @@
                             }
                         </td>
                     }
+                }
+
+                @if (IsButtonSave || IsButtonDelete)
+                {
+                    <td>
+                        @if (IsButtonSave)
+                        {
+                            <button class="btn btn-sm btn-success me-1" @onclick="@(() => OnSaveClicked(Item))">Edit</button>
+                        }
+                        @if (IsButtonDelete)
+                        {
+                            <button class="btn btn-sm btn-danger" @onclick="@(() => OnDeleteClicked(Item))">Delete</button>
+                        }
+                    </td>
                 }
             </tr>
         </tbody>
@@ -56,6 +72,10 @@ else if (Items is not null)
                 @foreach (var prop in props)
                 {
                     <th style="@getWidthStyle(prop.Name)">@prop.Name</th>
+                }
+                @if (IsButtonSave || IsButtonDelete)
+                {
+                    <th>Akce</th>
                 }
             </tr>
         </thead>
@@ -94,6 +114,20 @@ else if (Items is not null)
                             </td>
                         }
                     }
+
+                    @if (IsButtonSave || IsButtonDelete)
+                    {
+                        <td>
+                            @if (IsButtonSave)
+                            {
+                                <button class="btn btn-sm btn-success me-1" @onclick="@(() => OnSaveClicked(item))">Save</button>
+                            }
+                            @if (IsButtonDelete)
+                            {
+                                <button class="btn btn-sm btn-danger" @onclick="@(() => OnDeleteClicked(item))">Delete</button>
+                            }
+                        </td>
+                    }
                 </tr>
             }
         </tbody>
@@ -105,6 +139,11 @@ else if (Items is not null)
     [Parameter] public IEnumerable<T>? Items { get; set; }
     [Parameter] public List<string>? ColumnOrder { get; set; }
     [Parameter] public Dictionary<string, string>? ColumnWidths { get; set; }
+    [Parameter] public bool IsButtonSave { get; set; }
+    [Parameter] public bool IsButtonDelete { get; set; }
+
+    [Parameter] public EventCallback<T> OnSave { get; set; }
+    [Parameter] public EventCallback<T> OnDelete { get; set; }
 
     private PropertyInfo[] GetPropertiesInOrder()
     {
@@ -113,7 +152,6 @@ else if (Items is not null)
         if (ColumnOrder == null || ColumnOrder.Count == 0)
             return allProps;
 
-        // Vrátí jen properties, které jsou v ColumnOrder, ve stejném pořadí
         var ordered = ColumnOrder
             .Select(name => allProps.FirstOrDefault(p => p.Name == name))
             .Where(p => p != null)
@@ -137,5 +175,17 @@ else if (Items is not null)
         if (ColumnWidths != null && ColumnWidths.TryGetValue(propName, out var width))
             return $"width:{width};";
         return "";
+    }
+
+    private async Task OnSaveClicked(T item)
+    {
+        if (OnSave.HasDelegate)
+            await OnSave.InvokeAsync(item);
+    }
+
+    private async Task OnDeleteClicked(T item)
+    {
+        if (OnDelete.HasDelegate)
+            await OnDelete.InvokeAsync(item);
     }
 }

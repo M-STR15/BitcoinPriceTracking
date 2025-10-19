@@ -74,7 +74,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 			try
 			{
 				var cryptoDataNote = await _coindeskRepositories.GetCryptoDataNotesAsync();
-				var cryptoDataNoteDto = _mapper.Map<IEnumerable<CryptoDataNoteDTO>>(cryptoDataNote);	
+				var cryptoDataNoteDto = _mapper.Map<IEnumerable<CryptoDataNoteDTO>>(cryptoDataNote);
 				if (cryptoDataNoteDto != null)
 					return cryptoDataNoteDto != null ? Ok(cryptoDataNoteDto) : BadRequest();
 				else
@@ -92,7 +92,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		#region POST
 
 		[HttpPost("api/v1/crypto-data")]
-		public async Task<ActionResult<CryptoDataBaseDTO>> AddSubModulesAsync([FromBody] CryptoDataBaseDTO cryptoDataDto)
+		public async Task<ActionResult<CryptoDataBaseDTO>> AddCryptoDataAsync([FromBody] CryptoDataBaseDTO cryptoDataDto)
 		{
 			try
 			{
@@ -114,6 +114,57 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 			}
 		}
+
 		#endregion POST
+
+		#region PUT
+		[HttpPut("api/v1/crypto-data")]
+		public async Task<ActionResult<CryptoDataBaseDTO>> SaveCryptoDataAsync([FromBody] CryptoDataBaseDTO cryptoDataDto)
+		{
+			try
+			{
+				var cryptoData = _mapper.Map<CryptoData>(cryptoDataDto);
+				if (cryptoData != null)
+				{
+					var result = await _coindeskRepositories.UpdateCryptoDataNoteAsync(cryptoData);
+					if (result != null && _mapper != null)
+					{
+						cryptoDataDto = _mapper.Map<CryptoDataBaseDTO>(result);
+						return result != null ? Ok(cryptoDataDto) : Problem();
+					}
+					else
+					{
+						return Problem();
+					}
+				}
+				else
+				{
+					return BadRequest();
+				}
+			}
+			catch (Exception ex)
+			{
+				_eventLogService.LogError(Guid.Parse("604ecf36-2086-4608-a468-52894ab4ae55"), ex);
+				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+			}
+		}
+		#endregion PUT
+
+		#region DELETE
+		[HttpDelete("api/v1/crypto-data-note/{cryptoDataNoteId}")]
+		public async Task<IActionResult> DeleteCryptoDataNoteAsync(int cryptoDataNoteId)
+		{
+			try
+			{
+				var result = await _coindeskRepositories.DeleteCryptoDataNoteAsync(cryptoDataNoteId);
+				return result ? Ok() : Problem();
+			}
+			catch (Exception ex)
+			{
+				_eventLogService.LogError(Guid.Parse("00bc4790-5d99-440b-9681-631c850d54aa"), ex);
+				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+			}
+		}
+		#endregion
 	}
 }

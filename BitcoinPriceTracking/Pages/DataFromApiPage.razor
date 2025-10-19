@@ -101,7 +101,7 @@
     {
         if (_httpClient != null)
         {
-            var result = await _httpClient.PostAsJsonAsync<CryptoDataBaseDTO>("/api/v1/crypto-data/database", _cryptoDataDto);
+            var result = await _httpClient.PostAsJsonAsync<CryptoDataBaseDTO>("/api/v1/crypto-data", _cryptoDataDto);
         }
     }
 }
