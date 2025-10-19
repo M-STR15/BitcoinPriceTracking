@@ -1,0 +1,13 @@
+﻿<label @onclick="@OnClick" style="@Style" class="@($"btn {Class} {(IsDisabled ? "disabled" : "")}")" role="button">
+    <span class="btn-text">
+        @if (!string.IsNullOrEmpty(Text))
+        {
+            @Text
+        }
+        else
+        {
+            @ChildContent
+        }
+
+    </span>
+</label>
