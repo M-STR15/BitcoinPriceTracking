@@ -46,11 +46,11 @@
                             <!-- rozevírací sekce -->
                             <div>
                                 <button class="btn btn-sm btn-outline-primary"
-                                        @onclick="@(() => Toggle(prop.Name))">
-                                    @(IsExpanded(prop.Name) ? "▼ Sbalit" : "▶ Rozbalit")
+                                        @onclick="@(() => toggle(prop.Name))">
+                                    @(isExpanded(prop.Name) ? "▼ Sbalit" : "▶ Rozbalit")
                                 </button>
 
-                                @if (IsExpanded(prop.Name))
+                                @if (isExpanded(prop.Name))
                                 {
                                     <div class="ms-3 mt-2">
                                         @if (value is System.Collections.IEnumerable enumerable && !(value is string))
@@ -90,12 +90,12 @@
 
     private HashSet<string> _expanded = new();
 
-    private void Toggle(string key)
+    private void toggle(string key)
     {
         if (!_expanded.Add(key))
             _expanded.Remove(key);
     }
 
-    private bool IsExpanded(string key) => _expanded.Contains(key);
+    private bool isExpanded(string key) => _expanded.Contains(key);
 
 }

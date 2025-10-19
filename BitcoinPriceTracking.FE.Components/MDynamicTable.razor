@@ -70,7 +70,7 @@ else if (Items is not null)
 
                         if (value is null)
                         {
-                            <td></td>
+                            <td>aaa</td>
                         }
                         else if (hasNested)
                         {
@@ -79,10 +79,17 @@ else if (Items is not null)
                         else
                         {
                             <td>
-                                @if (value is System.Collections.IEnumerable enumerable)
-                                {
-                                    <MTableForProperty Item="value" />
-                                }
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                            @onclick="@(() => toggle(prop.Name))">
+                                        @(isExpanded(prop.Name) ? "▼ Sbalit" : "▶ Rozbalit")
+                                    </button>
+
+                                    @if (isExpanded(prop.Name))
+                                    {
+                                        <MTableForProperty Item="value" />
+                                    }
+                                </div>
                             </td>
                         }
                     }
@@ -112,5 +119,14 @@ else if (Items is not null)
             .ToArray();
 
         return ordered;
+    }
+
+    private HashSet<string> _expanded = new();
+    private bool isExpanded(string key) => _expanded.Contains(key);
+
+    private void toggle(string key)
+    {
+        if (!_expanded.Add(key))
+            _expanded.Remove(key);
     }
 }
