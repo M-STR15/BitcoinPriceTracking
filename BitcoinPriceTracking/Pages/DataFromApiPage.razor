@@ -31,15 +31,15 @@
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="@getTabClass(eTab.CryptoData)" @onclick="() => selectTab(eTab.CryptoData)">CRYPTO DATA</button>
+        <button class="@getTabClass(eTabDataFromApi.CryptoData)" @onclick="() => selectTab(eTabDataFromApi.CryptoData)">CRYPTO DATA</button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="@getTabClass(eTab.CnbData)" @onclick="() => selectTab(eTab.CnbData)">ČNB DATA</button>
+        <button class="@getTabClass(eTabDataFromApi.CnbData)" @onclick="() => selectTab(eTabDataFromApi.CnbData)">ČNB DATA</button>
     </li>
 </ul>
 
 <div class="tab-content mt-3">
-    @if (selectedTab == eTab.CryptoData)
+    @if (selectedTab == eTabDataFromApi.CryptoData)
     {
         <p>Zobrazuje surová data z https://data-api.coindesk.com/spot/v1/latest/tick?market=coinbase&instruments=BTC-EUR</p>
         <button @onclick="addAddCryptoDataToDb_Click">Add actual data to database</button>
@@ -52,7 +52,7 @@
             <MTableForProperty Item="_cryptoDataDto" />
         }
     }
-    else if (selectedTab == eTab.CnbData)
+    else if (selectedTab == eTabDataFromApi.CnbData)
     {
         <p>Zobrazuje surová data z https://www.cnb.cz//cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.xml</p>
         @if (_cnbDataDto == null)
@@ -67,7 +67,7 @@
 </div>
 
 @code {
-    private eTab selectedTab = eTab.CryptoData;
+    private eTabDataFromApi selectedTab = eTabDataFromApi.CryptoData;
 
     private CryptoDataBaseDTO? _cryptoDataDto;
     private PropertyInfo[]? _cryptoDataDtoProperties = Array.Empty<PropertyInfo>();
@@ -90,9 +90,9 @@
         }
     }
 
-    private string getTabClass(eTab tab) => tab == selectedTab ? "active-tab" : "";
+    private string getTabClass(eTabDataFromApi tab) => tab == selectedTab ? "active-tab" : "";
 
-    private void selectTab(eTab tab)
+    private void selectTab(eTabDataFromApi tab)
     {
         selectedTab = tab;
     }

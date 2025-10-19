@@ -1,47 +1,119 @@
-﻿@page "/Reporting-from-database"
+﻿@page "/reporting-from-database"
 @using AutoMapper
 @using BitcoinPriceTracking.BE.Shared.Models.DTOs
+@using BitcoinPriceTracking.Enums
 @using BitcoinPriceTracking.FE.Components
 @using BitcoinPriceTracking.Models.MVs
 
 @inherits BasePage
 
-@if (_cryptoDataReportMv == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <MDynamicTable T="CryptoDataReportMV"
-                    Items="_cryptoDataReportMv"
-                    ColumnOrder="_columnOrder"
-                    ColumnWidths="_columnWidths" />
-}
+<style>
+    .tabs button {
+        padding: 10px 20px;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+    .active-tab {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .tab-content {
+        margin-top: 20px;
+    }
+</style>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="@getTabClass(eTabDataReportingFromDatabase.Table)" @onclick="() => selectTab(eTabDataReportingFromDatabase.Table)">Table</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="@getTabClass(eTabDataReportingFromDatabase.Chart)" @onclick="() => selectTab(eTabDataReportingFromDatabase.Chart)">Chart</button>
+    </li>
+</ul>
+
+<div class="tab-content mt-3">
+    @if (selectedTab == eTabDataReportingFromDatabase.Table)
+    {
+        @if (_cryptoDataReportMv == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <MDynamicTable T="CryptoDataReportMV"
+                           Items="_cryptoDataReportMv"
+                           ColumnOrder="_columnOrder"
+                           ColumnWidths="_columnWidths" />
+        }
+    }
+    else if (selectedTab == eTabDataReportingFromDatabase.Chart)
+    {
+        @if (_cryptoDataReportMv == null && _dataset != null && _labels != null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <MChart Labels="_labels" Dataset="_dataset" Options="_options" />
+        }
+    }
+</div>
 
 @code {
     [Inject]
     private IMapper _mapper { get; set; }
     private IEnumerable<CryptoDataReportMV>? _cryptoDataReportMv;
+
+    private object? _labels;
+    private object? _dataset;
+    private object? _options;
+
+    private eTabDataReportingFromDatabase selectedTab = eTabDataReportingFromDatabase.Table;
+
     private List<string> _columnOrder = new List<string>
     {
-        nameof(CryptoDataReportMV.CryptoDataId),
-        nameof(CryptoDataReportMV.TimeStamp),
-        nameof(CryptoDataReportMV.Note),
-        nameof(CryptoDataReportMV.PRICE)
+    nameof(CryptoDataReportMV.CryptoDataId),
+    nameof(CryptoDataReportMV.TimeStamp),
+    nameof(CryptoDataReportMV.Note),
+    nameof(CryptoDataReportMV.PRICE)
     };
     private Dictionary<string, string> _columnWidths = new Dictionary<string, string>
     {
-        { nameof(CryptoDataReportMV.CryptoDataId), "60px" },
-        { nameof(CryptoDataReportMV.TimeStamp), "200px" },
-        { nameof(CryptoDataReportMV.Note), "250px" },
-        { nameof(CryptoDataReportMV.PRICE), "250px" }
+    { nameof(CryptoDataReportMV.CryptoDataId), "60px" },
+    { nameof(CryptoDataReportMV.TimeStamp), "200px" },
+    { nameof(CryptoDataReportMV.Note), "250px" },
+    { nameof(CryptoDataReportMV.PRICE), "250px" }
     };
 
     protected override async Task OnInitializedAsync()
     {
         var cryptoDataNotesDTO = await loadData<IEnumerable<CryptoDataNoteDTO>>("api/v1/crypto-data-note");
         _cryptoDataReportMv = _mapper.Map<IEnumerable<CryptoDataReportMV>>(cryptoDataNotesDTO);
-
+        setDataset();
     }
 
+
+    private void setDataset()
+    {
+        var labels = _cryptoDataReportMv?.Select(x => x.TimeStamp.ToString("dd.MM")).ToArray();
+        var prices = _cryptoDataReportMv?.Select(x => x.PRICE).ToArray();
+        _dataset = new[]
+        {
+    new { Data = prices, BackgroundColor = "gray", Type= "line",Label= "Price",BorderColor="gray"},
+    };
+        _labels = labels;
+    }
+
+    private string getTabClass(eTabDataReportingFromDatabase tab) => tab == selectedTab ? "active-tab" : "";
+
+    private void selectTab(eTabDataReportingFromDatabase tab)
+    {
+        selectedTab = tab;
+    }
 }

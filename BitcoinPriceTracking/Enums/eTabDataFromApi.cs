@@ -1,6 +1,6 @@
 ﻿namespace BitcoinPriceTracking.Enums
 {
-	public enum eTab
+	public enum eTabDataFromApi
 	{
 		CryptoData,
 		CnbData

@@ -1,0 +1,8 @@
+﻿	návod jak vyvořit graf
+		https://puresourcecode.com/dotnet/blazor/using-chart-js-with-blazor/
+
+	struktury různých grafů
+		https://www.chartjs.org/docs/latest/
+
+	pro zprovoznění grafu je potřeba přidat do app.razor 
+	    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
