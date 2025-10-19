@@ -6,7 +6,6 @@
 	/// </summary>
 	public class BuildInfo
 	{
-		public readonly DateTime? BuildDate = DateTime.Parse("2025-02-06 22:46:07");
 		public readonly string VersionStr;
 
 		public BuildInfo()
@@ -15,7 +14,7 @@
 			var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 			var version = assembly.GetName().Version;
 			if (version != null)
-				VersionStr = string.Format("v. {0}.{1}.{2} | b. {3}", version.Major, version.Minor, version.Build, BuildDate?.ToString("yyMMdd"));
+				VersionStr = string.Format("v. {0}.{1}.{2}", version.Major, version.Minor, version.Build);
 		}
 	}
 }

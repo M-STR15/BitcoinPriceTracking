@@ -10,7 +10,7 @@ namespace BitcoinPriceTracking.BE.Shared.Helpers
 
 			//var assembly = Assembly.GetExecutingAssembly();
 			//var version = FileVersionInfo.GetVersionInfo(assembly.Location);
-			var version = Assembly.GetExecutingAssembly()?.GetName()?.Version;
+			var version = Assembly.GetEntryAssembly()?.GetName()?.Version;
 			var versionStr = string.Format($"{version.Major}.{version.Minor}.{version.Build}");
 			var typeRelease = " DEBUG";
 #if RELEASE
@@ -19,9 +19,7 @@ namespace BitcoinPriceTracking.BE.Shared.Helpers
 #if RELEASE_TOS_SERVER
 			typeRelease = "";
 #endif
-
-			var dateVersion = new BuildInfo().BuildDate?.ToString("yyMMdd") ?? "";
-			return string.Format("v{0}.{1}{2}", versionStr, dateVersion, typeRelease);
+			return string.Format("v{0}.{1}", versionStr, typeRelease);
 		}
 	}
 }

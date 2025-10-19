@@ -1,7 +1,18 @@
 ﻿@inject NavigationManager NavigationManager
 
+@using BitcoinPriceTracking.BE.Shared.Helpers
+@using BitcoinPriceTracking.BE.Shared.Models
 @using BitcoinPriceTracking.FE.Components
+<style>
+    .version {
+    color: white;
+    }
 
+    .horizontal-center {
+        display: flex;
+        justify-content: center;
+    }
+</style>
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">BitcoinPriceTracking</a>
@@ -37,6 +48,9 @@
             <NavLink class="nav-link" @onclick="onOpenDocumentPage_Click" Match="NavLinkMatch.All">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Documents(Swagger)
             </NavLink>
+        </div>
+        <div class="horizontal-center">
+            <label class="version">@(VersionSWHelper.GetVersionSW())</label>
         </div>
     </nav>
 </div>
