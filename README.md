@@ -116,7 +116,8 @@ Dodatečné info
 ### 0.1.0   (2025-10-19)
 - 🚀 přidání sortování a filtrování v tabulkách
 - 🚀 zobrazování verzovacího čísta aplikace
-- ❌ odstraněno API pro úpravu[PUT] CryptoDat, je to z důvodu, že data by se neměla měnit po uložení
+- ❌ odstraněno API pro úpravu [PUT] CryptoDat, je to z důvodu, že data by se neměla měnit po uložení
+- 🚀 nové API pro uložení poznámek k záznamu [PUT] CryptoDatNote
 ***
 ### 0.0.1   (2025-10-19)
 - 🚀 vytvořené základní funkcionality aplikace dle požadavku projektu
