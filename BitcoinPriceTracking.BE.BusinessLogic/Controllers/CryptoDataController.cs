@@ -146,25 +146,26 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 			}
 		}
-
 		#endregion POST
+		#region PUT	
 
-		#region PUT
 		/// <summary>
-		/// Uloží upravená data o kryptoměně do databáze.
+		/// Uloží upravenou poznámku ke kryptoměnovým datům podle zadaného ID.
 		/// </summary>
-		/// <param name="cryptoDataDto">DTO objekt s upravenými daty o kryptoměně.</param>
+		/// <param name="cruptoDataNoteId">ID poznámky, která má být upravena.</param>
+		/// <param name="cryptoDataNoteDto">DTO objekt s upravenými daty poznámky.</param>
 		/// <returns>
-		/// 200 OK s <see cref="CryptoDataBaseDTO"/> pokud byla data úspěšně uložena,
+		/// 200 OK s <see cref="CryptoDataNoteBaseDTO"/> pokud byla poznámka úspěšně uložena,
 		/// 400 Bad Request pokud je vstup neplatný,
 		/// nebo 500 Internal Server Error při výjimce.
 		/// </returns>
-		[HttpPut("api/v1/crypto-data-note")]
-		public async Task<ActionResult<CryptoDataNoteBaseDTO>> SaveCryptoDataNoteAsync([FromBody] CryptoDataNoteBaseDTO cryptoDataNoteDto)
+		[HttpPut("api/v1/crypto-data-note/{cruptoDataNoteId}")]
+		public async Task<ActionResult<CryptoDataNoteBaseDTO>> SaveCryptoDataNoteAsync(int cruptoDataNoteId, [FromBody] CryptoDataNoteEditDTO cryptoDataNoteDto)
 		{
 			try
 			{
 				var cryptoDataNote = _mapper.Map<CryptoDataNote>(cryptoDataNoteDto);
+				cryptoDataNote.Id = cruptoDataNoteId;
 				if (cryptoDataNote != null)
 				{
 					var result = await _coindeskRepositories.UpdateCryptoDataNoteAsync(cryptoDataNote);

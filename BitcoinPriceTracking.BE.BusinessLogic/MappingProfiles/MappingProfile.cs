@@ -12,6 +12,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.MappingProfiles
 		{
 			CreateMap<CryptoData, CryptoDataBaseDTO>().ReverseMap();
 			CreateMap<CryptoDataNote, CryptoDataNoteDTO>().ReverseMap();
+			CreateMap<CryptoDataNote, CryptoDataNoteEditDTO>().ReverseMap();
 			CreateMap<kurzy, kurzyDTO>().ReverseMap();
 		}
 	}

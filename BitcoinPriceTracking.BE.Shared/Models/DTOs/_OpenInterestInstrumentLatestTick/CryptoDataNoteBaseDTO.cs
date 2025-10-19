@@ -1,10 +1,9 @@
 ﻿namespace BitcoinPriceTracking.BE.Shared.Models.DTOs
 {
-	public class CryptoDataNoteBaseDTO
+	public class CryptoDataNoteBaseDTO : CryptoDataNoteEditDTO
 	{
-		public int Id { get; set; }
-		public string Note { get; set; } = string.Empty;
-		public DateTime TimeStamp { get; set; }
-		public int CryptoDataId { get; set; }
+		public virtual int Id { get; set; }
+		public virtual DateTime TimeStamp { get; set; }
+		public virtual int CryptoDataId { get; set; }
 	}
 }
