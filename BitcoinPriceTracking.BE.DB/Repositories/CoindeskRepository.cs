@@ -17,7 +17,7 @@ namespace BitcoinPriceTracking.BE.DB.Repositories
 			try
 			{
 				var context = _contextFactory();
-				return await context.CryptoDatas.LastOrDefaultAsync();
+				return await context?.CryptoDatas?.LastOrDefaultAsync();
 			}
 			catch (Exception)
 			{
@@ -77,7 +77,6 @@ namespace BitcoinPriceTracking.BE.DB.Repositories
 			}
 			catch (Exception ex)
 			{
-				var test = ex;
 				throw;
 			}
 		}
@@ -88,7 +87,8 @@ namespace BitcoinPriceTracking.BE.DB.Repositories
 			{
 				var context = _contextFactory();
 				var removedCryptoData = context.CryptoDatas.Find(cryptoDataId);
-				var removedCryptoDataNote = context.CryptoDataNotes.FirstOrDefault(x => x.CryptoDataId == removedCryptoData.Id);
+				var removedCryptoDataId = removedCryptoData?.Id;
+				var removedCryptoDataNote = context.CryptoDataNotes.FirstOrDefault(x => x.CryptoDataId == removedCryptoDataId);
 
 				if (removedCryptoDataNote != null && removedCryptoData != null)
 				{
@@ -105,7 +105,6 @@ namespace BitcoinPriceTracking.BE.DB.Repositories
 			}
 			catch (Exception ex)
 			{
-				var test = ex;
 				throw;
 			}
 		}

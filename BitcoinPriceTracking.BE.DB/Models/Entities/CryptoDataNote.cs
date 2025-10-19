@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace BitcoinPriceTracking.BE.DB.Models.Entities
 {
 	[Table("Crypto_data_notes", Schema = "dbo")]
-	public class CryptoDataNote
+	public class CryptoDataNote : ICryptoDataNoteBase
 	{
 		[Key]
 		public int Id { get; set; }
