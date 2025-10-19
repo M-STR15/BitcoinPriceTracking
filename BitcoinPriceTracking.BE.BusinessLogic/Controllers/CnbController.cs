@@ -19,6 +19,10 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 			_coindeskRepository = coindeskRepository;
 		}
 
+		/// <summary>
+		/// Vrátí aktuální CNB data z bufferu. Pokud nejsou k dispozici, vrátí NotFound.
+		/// V případě chyby vrací kód 500 a zaloguje chybu.
+		/// </summary>
 		[HttpGet("api/v1/cnb-data/buffer")]
 		public async Task<ActionResult<CryptoDataBaseDTO>> GetCnbDataFromBufferAsync()
 		{
