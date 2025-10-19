@@ -1,8 +1,15 @@
 ﻿# BitcoinPriceTracking (ve vývoji)
 
-Aplikace vznikla za účelem evidování aktivit při vývoji SWs. Následné zobrazení výsledků aktivit za jednotlivé dny. 
-
-Tento program byl vytvořen za účelem vlastní potřeby.Ale může ho kdokoliv užívat zdarma.
+Aplikace slouží k načítání dat z API:
+- https://data-api.coindesk.com//cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.xml
+    
+    - tyto data se v BUFFEru aktualizují jednou za minutu
+  
+- https://www.cnb.cz//cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.xml
+  
+    - tyto data se v BUFFEru aktualizují jednou za den
+ 
+Tyto data je poté možné uložit či zobrazit. 
 
 
 ## Authors
@@ -38,7 +45,32 @@ Tento program byl vytvořen za účelem vlastní potřeby.Ale může ho kdokoliv
    - Pište čitelný, srozumitelný a udržitelný kód
    - Dbejte na oddělení business logiky od prezentační vrstvy
 
+## Použita technologie
 
+- Backend:
+    - ASP.NET Core Web API
+    - EF Core
+    - Logování-serilog
+    
+- Frontend:
+    - Blazor
+
+- Databáze:
+    - Microsoft SQL Server
+
+- Architektura:
+    - Aplikace je psaná architekturou MVC
+    - Projekt je rozdělený na několik menších projektů pro lepší přehlednost a údržbu kódu.
+        - BE (backendová část)
+            - BusinessLogic
+                - zde se nachází kontrolery , služby a další logika aplikace
+            - DB (databázová část))
+                - zde se nachází entity a kontext databáze
+            - Shared
+                - zde se nachází DTO a další sdílené objekty
+        - FE (frontendová část)
+            - Components
+                - zde se nachází komponenty aplikace
 
 ### Changes
 
@@ -64,4 +96,5 @@ Dodatečné info
 
 ***
 
-#### 0.0.1   (2025-10-10)
+#### 0.0.1   (2025-10-19)
+- 🚀 vytvořené základní funkcionality aplikace dle požadavku projektu
