@@ -90,19 +90,40 @@ else if (Items is not null)
                 @foreach (var prop in props)
                 {
                     <th style="@getWidthStyle(prop.Name)">
-                        <button class="btn btn-sm btn-link p-0" @onclick="@(() => ToggleSort(prop.Name))">
+                        @if (IsSortable(prop))
+                        {
+                            <button class="btn btn-sm btn-link p-0" @onclick="@(() => ToggleSort(prop.Name))">
+                                @prop.Name
+                                @(SortColumn == prop.Name ? (SortAscending ? "▲" : "▼") : "")
+                            </button>
+                        }
+                        else
+                        {
                             @prop.Name
-                            @(SortColumn == prop.Name ? (SortAscending ? "▲" : "▼") : "")
-                        </button>
+                        }
                     </th>
                 }
                 @if (IsButtonSave || IsButtonDelete)
                 {
+                    <th>Akce</th>
+                }
+            </tr>
+            <tr>
+                @foreach (var prop in props)
+                {
                     <th>
-                        <button class="btn btn-sm btn-link p-0">
-                            Akce
-                        </button>
+                        @if (IsFilterable(prop))
+                        {
+                            <input class="form-control form-control-sm"
+                                   placeholder="Filtrovat..."
+                                   value="@GetFilterValue(prop.Name)"
+                                   @oninput="(e => OnFilterChanged(prop.Name, e.Value?.ToString()))" />
+                        }
                     </th>
+                }
+                @if (IsButtonSave || IsButtonDelete)
+                {
+                    <th></th>
                 }
             </tr>
         </thead>
@@ -172,7 +193,8 @@ else if (Items is not null)
 
     [Parameter] public string? SortColumn { get; set; }
     [Parameter] public bool SortAscending { get; set; } = true;
-    [Parameter] public Dictionary<string, Func<object, bool>>? Filters { get; set; }
+
+    private Dictionary<string, string> FilterTexts = new();
 
     private PropertyInfo[] GetPropertiesInOrder()
     {
@@ -202,6 +224,8 @@ else if (Items is not null)
         return type.IsPrimitive || type == typeof(string) || type == typeof(DateTime) || type == typeof(decimal);
     }
 
+    private bool IsFilterable(PropertyInfo prop) => IsSortable(prop);
+
     private string getWidthStyle(string propName)
     {
         if (ColumnWidths != null && ColumnWidths.TryGetValue(propName, out var width))
@@ -225,7 +249,7 @@ else if (Items is not null)
     {
         var prop = GetPropertiesInOrder().FirstOrDefault(p => p.Name == column);
         if (prop == null || !IsSortable(prop))
-            return; // ignoruj nestorovatelné sloupce
+            return;
 
         if (SortColumn == column)
             SortAscending = !SortAscending;
@@ -243,27 +267,46 @@ else if (Items is not null)
 
         var result = items;
 
-        // Filtrování podle viditelných sloupců
-        if (Filters != null && Filters.Any())
+        // Filtrování
+        foreach (var filter in FilterTexts)
         {
-            foreach (var filter in Filters)
+            var prop = props.FirstOrDefault(p => p.Name == filter.Key && IsFilterable(p));
+            if (prop != null && !string.IsNullOrWhiteSpace(filter.Value))
             {
-                var prop = props.FirstOrDefault(p => p.Name == filter.Key);
-                if (prop != null)
-                    result = result.Where(item => filter.Value(prop.GetValue(item)!));
+                string text = filter.Value.ToLowerInvariant();
+                result = result.Where(item =>
+                {
+                    var val = prop.GetValue(item);
+                    return val != null && val.ToString()!.ToLowerInvariant().Contains(text);
+                });
             }
         }
 
-        // Řazení podle viditelných sloupců
+        // Řazení
         if (!string.IsNullOrEmpty(SortColumn))
         {
-            var prop = props.FirstOrDefault(p => p.Name == SortColumn);
+            var prop = props.FirstOrDefault(p => p.Name == SortColumn && IsSortable(p));
             if (prop != null)
+            {
                 result = SortAscending
-                ? result.OrderBy(item => prop.GetValue(item))
-                : result.OrderByDescending(item => prop.GetValue(item));
+                    ? result.OrderBy(item => prop.GetValue(item))
+                    : result.OrderByDescending(item => prop.GetValue(item));
+            }
         }
 
         return result;
     }
-                        }
+
+    private void OnFilterChanged(string propName, string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            FilterTexts.Remove(propName);
+        else
+            FilterTexts[propName] = value;
+
+        StateHasChanged();
+    }
+
+    private string GetFilterValue(string propName)
+        => FilterTexts.TryGetValue(propName, out var v) ? v : string.Empty;
+}
