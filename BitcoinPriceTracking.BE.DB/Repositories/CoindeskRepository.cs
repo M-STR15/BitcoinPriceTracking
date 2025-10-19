@@ -64,7 +64,7 @@ namespace BitcoinPriceTracking.BE.DB.Repositories
 			}
 		}
 
-		public async Task<CryptoDataNote?> UpdateCryptoDataNoteAsync(ICryptoData cryptoDataNote)
+		public async Task<CryptoDataNote?> UpdateCryptoDataNoteAsync(CryptoDataNote cryptoDataNote)
 		{
 			try
 			{

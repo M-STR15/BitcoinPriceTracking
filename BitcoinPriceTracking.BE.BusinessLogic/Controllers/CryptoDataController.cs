@@ -159,19 +159,19 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		/// 400 Bad Request pokud je vstup neplatný,
 		/// nebo 500 Internal Server Error při výjimce.
 		/// </returns>
-		[HttpPut("api/v1/crypto-data")]
-		public async Task<ActionResult<CryptoDataBaseDTO>> SaveCryptoDataAsync([FromBody] CryptoDataBaseDTO cryptoDataDto)
+		[HttpPut("api/v1/crypto-data-note")]
+		public async Task<ActionResult<CryptoDataNoteBaseDTO>> SaveCryptoDataNoteAsync([FromBody] CryptoDataNoteBaseDTO cryptoDataNoteDto)
 		{
 			try
 			{
-				var cryptoData = _mapper.Map<CryptoData>(cryptoDataDto);
-				if (cryptoData != null)
+				var cryptoDataNote = _mapper.Map<CryptoDataNote>(cryptoDataNoteDto);
+				if (cryptoDataNote != null)
 				{
-					var result = await _coindeskRepositories.UpdateCryptoDataNoteAsync(cryptoData);
+					var result = await _coindeskRepositories.UpdateCryptoDataNoteAsync(cryptoDataNote);
 					if (result != null && _mapper != null)
 					{
-						cryptoDataDto = _mapper.Map<CryptoDataBaseDTO>(result);
-						return result != null ? Ok(cryptoDataDto) : Problem();
+						cryptoDataNoteDto = _mapper.Map<CryptoDataNoteBaseDTO>(result);
+						return result != null ? Ok(cryptoDataNoteDto) : Problem();
 					}
 					else
 					{

@@ -8,7 +8,7 @@ namespace BitcoinPriceTracking.BE.DB.Repositories
 		Task<ICryptoData> AddCryptoDataAsync(ICryptoData cryptoData);
 		Task<ICryptoData> GetLastCryptoDataAsync();
 		Task<IEnumerable<CryptoDataNote>> GetCryptoDataNotesAsync();
-		Task<CryptoDataNote> UpdateCryptoDataNoteAsync(ICryptoData cryptoDataNote);
+		Task<CryptoDataNote> UpdateCryptoDataNoteAsync(CryptoDataNote cryptoDataNote);
 		Task<bool> DeleteCryptoDataAsync(int cryptoDataNoteId);
 	}
 }
