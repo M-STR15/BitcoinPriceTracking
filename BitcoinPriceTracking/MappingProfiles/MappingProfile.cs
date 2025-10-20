@@ -14,6 +14,10 @@ namespace BitcoinPriceTracking.MappingProfiles
 				.ForMember(dest => dest.TimeStamp, opt => opt.MapFrom(src => src.TimeStamp))
 				.ForMember(dest => dest.Note, opt => opt.MapFrom(src => src.Note))
 				.ForMember(dest => dest.PRICE, opt => opt.MapFrom(src => src.CryptoData.PRICE));
+
+
+
+			CreateMap<CryptoDataNoteMV, CryptoDataNoteDTO>().ReverseMap();
 		}
 	}
 }

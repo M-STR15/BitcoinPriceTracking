@@ -1,22 +1,24 @@
 ﻿@page "/data-from-database"
+@using AutoMapper
 @using BitcoinPriceTracking.BE.Shared.Models.DTOs
 @using BitcoinPriceTracking.FE.Components
 @using BitcoinPriceTracking.Modals
 @using BitcoinPriceTracking.Modals.Models
+@using BitcoinPriceTracking.Models.MVs
 
 @inherits BasePage
 
-@if (_cryptoDataNotesDTO == null)
+@if (_cryptoDataNotesMV == null)
 {
     <p><em><MLoader /></em></p>
 }
 else
 {
     <MDynamicTable T="CryptoDataNoteDTO"
-                   Items="_cryptoDataNotesDTO"
+                   Items="_cryptoDataNotesMV"
                    ColumnOrder="_columnOrder"
                    ColumnWidths="_columnWidths"
-                   IsButtonSave=false IsButtonDelete=true
+                   IsButtonSave=true IsButtonDelete=true
                    OnSave="HandleSave"
                    OnDelete="HandleDelete" />
 }
@@ -28,28 +30,37 @@ else
                  @bind-Visible="_isOpenDeleteQueryModal" />
 
 @code {
+    [Inject]
+    private IMapper _mapper { get; set; } = null!;
+
     private bool _isOpenDeleteQueryModal = false;
     private ResultQueryModel _resultQueryModel;
-    private IEnumerable<CryptoDataNoteDTO>? _cryptoDataNotesDTO;
+    private IEnumerable<CryptoDataNoteMV>? _cryptoDataNotesMV;
     private List<string> _columnOrder = new List<string>
     {
-        nameof(CryptoDataNoteDTO.Id),
-        nameof(CryptoDataNoteDTO.TimeStamp),
-        nameof(CryptoDataNoteDTO.Note),
-        nameof(CryptoDataNoteDTO.CryptoData)
+        nameof(CryptoDataNoteMV.Id),
+        nameof(CryptoDataNoteMV.TimeStamp),
+        nameof(CryptoDataNoteMV.Note),
+        nameof(CryptoDataNoteMV.CryptoData)
     };
     private Dictionary<string, string> _columnWidths = new Dictionary<string, string>
     {
-        { nameof(CryptoDataNoteDTO.Id), "60px" },
-        { nameof(CryptoDataNoteDTO.TimeStamp), "200px" },
-        { nameof(CryptoDataNoteDTO.Note), "250px" }
+        { nameof(CryptoDataNoteMV.Id), "60px" },
+        { nameof(CryptoDataNoteMV.TimeStamp), "200px" },
+        { nameof(CryptoDataNoteMV.Note), "250px" }
     };
 
     protected override async Task OnInitializedAsync()
     {
-        _cryptoDataNotesDTO = await loadData<IEnumerable<CryptoDataNoteDTO>>("api/v1/crypto-data-note");
+        loadData();
     }
 
+    private async void loadData()
+    {
+        var cryptoDataNotesDTO = await loadData<IEnumerable<CryptoDataNoteDTO>>("api/v1/crypto-data-note");
+        _cryptoDataNotesMV = _mapper.Map<IEnumerable<CryptoDataNoteMV>>(cryptoDataNotesDTO);
+        StateHasChanged();
+    }
     private void HandleSave(CryptoDataNoteDTO cryptoDataNoteDTO)
     {
 
@@ -72,14 +83,13 @@ else
             var existModel = _resultQueryModel.Model != null;
             if (resultQuery && _httpClient != null && existModel)
             {
-                var cryptoDataId = ((CryptoDataNoteDTO)_resultQueryModel.Model).CryptoDataId;
+                var cryptoDataId = ((CryptoDataNoteMV)_resultQueryModel.Model).CryptoDataId;
                 string urlApi = "api/v1/crypto-data/" + cryptoDataId;
                 var response = await _httpClient.DeleteAsync(urlApi);
 
                 if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    _cryptoDataNotesDTO = await loadData<IEnumerable<CryptoDataNoteDTO>>("api/v1/crypto-data-note");
-                    StateHasChanged();
+                    loadData();
                 }
             }
         }

@@ -1,5 +1,12 @@
 ﻿@using System.Reflection
+@using BitcoinPriceTracking.FE.Components.Interfaces
 @typeparam T
+
+<style>
+    .btn-fixed {
+        width: 80px; 
+    }
+</style>
 
 @if (Item is not null)
 {
@@ -68,11 +75,19 @@
                     <td>
                         @if (IsButtonSave)
                         {
-                            <button class="btn btn-sm btn-success me-1" @onclick="@(() => OnSaveClicked(Item))">Save</button>
+                            @if (isEdit(Item))
+                            {
+                                <button class="btn btn-sm btn-success me-1 btn-fixed" @onclick="@(() => OnSaveClicked(Item))">Save</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-sm btn-info me-1 btn-fixed" @onclick="@(() => OnEditClicked(Item))">Edit</button>
+                            }
                         }
+
                         @if (IsButtonDelete)
                         {
-                            <button class="btn btn-sm btn-danger" @onclick="@(() => OnDeleteClicked(Item))">Delete</button>
+                            <button class="btn btn-sm btn-danger btn-fixed" @onclick="@(() => OnDeleteClicked(Item))">Delete</button>
                         }
                     </td>
                 }
@@ -167,11 +182,18 @@ else if (Items is not null)
                         <td>
                             @if (IsButtonSave)
                             {
-                                <button class="btn btn-sm btn-success me-1" @onclick="@(() => OnSaveClicked(item))">Save</button>
+                                @if (isEdit(item))
+                                {
+                                    <button class="btn btn-sm btn-success me-1 btn-fixed" @onclick="@(() => OnSaveClicked(item))">Save</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-sm btn-info me-1 btn-fixed" @onclick="@(() => OnEditClicked(item))">Edit</button>
+                                }
                             }
                             @if (IsButtonDelete)
                             {
-                                <button class="btn btn-sm btn-danger" @onclick="@(() => OnDeleteClicked(item))">Delete</button>
+                                <button class="btn btn-sm btn-danger btn-fixed" @onclick="@(() => OnDeleteClicked(item))">Delete</button>
                             }
                         </td>
                     }
@@ -210,6 +232,12 @@ else if (Items is not null)
         .ToArray();
     }
 
+    private bool isEdit(T Item)
+    {
+        var aaa = (IDynamicTableItem)Item;
+        return aaa.IsEdit;
+    }
+
     private HashSet<string> _expanded = new();
     private bool isExpanded(string key) => _expanded.Contains(key);
     private void toggle(string key)
@@ -233,10 +261,20 @@ else if (Items is not null)
         return "";
     }
 
+    private async Task OnEditClicked(T item)
+    {
+        var itemMod = (IDynamicTableItem)item;
+        itemMod.IsEdit = true;
+    }
+
     private async Task OnSaveClicked(T item)
     {
         if (OnSave.HasDelegate)
+        {
             await OnSave.InvokeAsync(item);
+            var itemMod = (IDynamicTableItem)item;
+            itemMod.IsEdit = false;
+        }
     }
 
     private async Task OnDeleteClicked(T item)
