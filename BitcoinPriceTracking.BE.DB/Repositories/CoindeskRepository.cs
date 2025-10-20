@@ -44,7 +44,6 @@ namespace BitcoinPriceTracking.BE.DB.Repositories
 			}
 			catch (Exception ex)
 			{
-				var test = ex;
 				throw;
 			}
 		}
@@ -59,7 +58,20 @@ namespace BitcoinPriceTracking.BE.DB.Repositories
 			}
 			catch (Exception ex)
 			{
-				var test = ex;
+				throw;
+			}
+		}
+
+		public async Task<CryptoDataNote> GetCryptoDataNoteAsync(int cryptoDataNoteId)
+		{
+			try
+			{
+				var context = _contextFactory();
+				var cyptoDataNote = await context.CryptoDataNotes.Include(x => x.CryptoData).FirstOrDefaultAsync(x => x.Id == cryptoDataNoteId);
+				return cyptoDataNote;
+			}
+			catch (Exception ex)
+			{
 				throw;
 			}
 		}

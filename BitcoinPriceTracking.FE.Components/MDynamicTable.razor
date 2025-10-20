@@ -1,10 +1,18 @@
 ﻿@using System.Reflection
 @using BitcoinPriceTracking.FE.Components.Interfaces
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
 @typeparam T
 
 <style>
     .btn-fixed {
-        width: 80px; 
+        width: 80px;
+    }
+
+    .tall-input {
+        height: 40px;
+        padding: 6px 12px; /* volitelné, aby text nebyl u okrajů */
+        font-size: 16px; /* volitelné, větší text */
     }
 </style>
 
@@ -51,7 +59,19 @@
                     }
                     else if (!hasNested)
                     {
-                        <td>@value</td>
+                        @if (IsPropertyEditable<T>(prop.Name) && isEdit(Item))
+                        {
+                            <td>
+                                <input type="text"
+                                       class="form-control tall-input"
+                                       value="@GetPropertyValueAsString(Item, prop)"
+                                       @oninput="(e => SetPropertyValue(Item, prop, e.Value?.ToString()))" />
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@value</td>
+                        }
                     }
                     else
                     {
@@ -158,7 +178,19 @@ else if (Items is not null)
                         }
                         else if (!hasNested)
                         {
-                            <td>@value</td>
+                            @if (IsPropertyEditable<T>(prop.Name) && isEdit(item))
+                            {
+                                <td>
+                                    <input type="text"
+                                           class="form-control tall-input"
+                                           value="@GetPropertyValueAsString(item, prop)"
+                                           @oninput="(e => SetPropertyValue(item, prop, e.Value?.ToString()))" />
+                                </td>
+                            }
+                            else
+                            {
+                                <td>@value</td>
+                            }
                         }
                         else
                         {
@@ -218,6 +250,32 @@ else if (Items is not null)
 
     private Dictionary<string, string> FilterTexts = new();
 
+    string GetPropertyValueAsString(object item, PropertyInfo prop)
+    {
+        var value = prop.GetValue(item);
+        return value?.ToString() ?? string.Empty;
+    }
+
+    void SetPropertyValue(object item, PropertyInfo prop, string newValue)
+    {
+        if (prop.PropertyType == typeof(string))
+        {
+            prop.SetValue(item, newValue);
+        }
+        else if (prop.PropertyType == typeof(int))
+        {
+            if (int.TryParse(newValue, out int intValue))
+                prop.SetValue(item, intValue);
+        }
+        else if (prop.PropertyType == typeof(double))
+        {
+            if (double.TryParse(newValue, out double dblValue))
+                prop.SetValue(item, dblValue);
+        }
+        // další typy podle potřeby
+    }
+
+
     private PropertyInfo[] GetPropertiesInOrder()
     {
         var allProps = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -226,16 +284,37 @@ else if (Items is not null)
             return allProps;
 
         return ColumnOrder
-        .Select(name => allProps.FirstOrDefault(p => p.Name == name))
-        .Where(p => p != null)
-        .Cast<PropertyInfo>()
-        .ToArray();
+            .Select(name => allProps.FirstOrDefault(p => p.Name == name))
+            .Where(p => p != null)
+            .Cast<PropertyInfo>()
+            .ToArray();
     }
 
-    private bool isEdit(T Item)
+    public static bool IsPropertyEditable<T>(string propertyName)
     {
-        var aaa = (IDynamicTableItem)Item;
-        return aaa.IsEdit;
+        var prop = typeof(T).GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+        if (prop == null)
+            return false;
+
+        var attr = prop.GetCustomAttribute<EditableAttribute>();
+        return attr?.AllowEdit ?? false; // když atribut chybí, bereme jako editovatelné
+    }
+
+    public static IEnumerable<PropertyInfo> GetEditableProperties<T>()
+    {
+        return typeof(T)
+            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p =>
+            {
+                var attr = p.GetCustomAttribute<EditableAttribute>();
+                return attr?.AllowEdit ?? false; // když atribut chybí, bereme jako editovatelné
+            });
+    }
+
+    private bool isEdit(T item)
+    {
+        var conMod = (IDynamicTableItem)item;
+        return conMod.IsEdit;
     }
 
     private HashSet<string> _expanded = new();

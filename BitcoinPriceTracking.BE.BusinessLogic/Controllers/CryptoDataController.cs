@@ -164,11 +164,13 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		{
 			try
 			{
-				var cryptoDataNote = _mapper.Map<CryptoDataNote>(cryptoDataNoteDto);
-				cryptoDataNote.Id = cruptoDataNoteId;
-				if (cryptoDataNote != null)
+				var cryptodataOrig = await _coindeskRepositories.GetCryptoDataNoteAsync(cruptoDataNoteId);
+				cryptodataOrig.Note = cryptoDataNoteDto.Note;
+
+				
+				if (cryptodataOrig != null)
 				{
-					var result = await _coindeskRepositories.UpdateCryptoDataNoteAsync(cryptoDataNote);
+					var result = await _coindeskRepositories.UpdateCryptoDataNoteAsync(cryptodataOrig);
 					if (result != null && _mapper != null)
 					{
 						cryptoDataNoteDto = _mapper.Map<CryptoDataNoteBaseDTO>(result);

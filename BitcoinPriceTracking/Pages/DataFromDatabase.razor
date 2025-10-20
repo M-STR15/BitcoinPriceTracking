@@ -14,7 +14,7 @@
 }
 else
 {
-    <MDynamicTable T="CryptoDataNoteDTO"
+    <MDynamicTable T="CryptoDataNoteMV"
                    Items="_cryptoDataNotesMV"
                    ColumnOrder="_columnOrder"
                    ColumnWidths="_columnWidths"
@@ -61,16 +61,18 @@ else
         _cryptoDataNotesMV = _mapper.Map<IEnumerable<CryptoDataNoteMV>>(cryptoDataNotesDTO);
         StateHasChanged();
     }
-    private void HandleSave(CryptoDataNoteDTO cryptoDataNoteDTO)
+    private async void HandleSave(CryptoDataNoteMV cryptoDataNoteMV)
     {
-
+        var cryptoDataNotesDTO = _mapper.Map<CryptoDataNoteDTO>(cryptoDataNoteMV);
+        var cryptoDataNoteId = cryptoDataNotesDTO.Id;
+        var result = _httpClient.PutAsJsonAsync<CryptoDataNoteDTO>($"api/v1/crypto-data-note/{cryptoDataNoteId}", cryptoDataNotesDTO);
     }
 
-    private void HandleDelete(CryptoDataNoteDTO cryptoDataNoteDTO)
+    private void HandleDelete(CryptoDataNoteMV cryptoDataNoteMV)
     {
         _resultQueryModel = new ResultQueryModel()
             {
-                Model = cryptoDataNoteDTO
+                Model = cryptoDataNoteMV
             };
         _isOpenDeleteQueryModal = true;
     }
