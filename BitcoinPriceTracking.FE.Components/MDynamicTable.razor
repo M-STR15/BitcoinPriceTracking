@@ -18,17 +18,17 @@
 
 @if (Item is not null)
 {
-    var props = GetPropertiesInOrder();
+    var props = getPropertiesInOrder();
 
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 @foreach (var prop in props)
                 {
-                    @if (IsSortable(prop))
+                    @if (isSortable(prop))
                     {
                         <th style="@getWidthStyle(prop.Name)">
-                            <button class="btn btn-sm btn-link p-0" @onclick="@(() => ToggleSort(prop.Name))">
+                            <button class="btn btn-sm btn-link p-0" @onclick="@(() => toggleSort(prop.Name))">
                                 @prop.Name
                                 @(SortColumn == prop.Name ? (SortAscending ? "▲" : "▼") : "")
                             </button>
@@ -64,8 +64,8 @@
                             <td>
                                 <input type="text"
                                        class="form-control tall-input"
-                                       value="@GetPropertyValueAsString(Item, prop)"
-                                       @oninput="(e => SetPropertyValue(Item, prop, e.Value?.ToString()))" />
+                                       value="@getPropertyValueAsString(Item, prop)"
+                                       @oninput="(e => setPropertyValue(Item, prop, e.Value?.ToString()))" />
                             </td>
                         }
                         else
@@ -97,17 +97,17 @@
                         {
                             @if (isEdit(Item))
                             {
-                                <button class="btn btn-sm btn-success me-1 btn-fixed" @onclick="@(() => OnSaveClicked(Item))">Save</button>
+                                <button class="btn btn-sm btn-success me-1 btn-fixed" @onclick="@(() => onSaveClicked(Item))">Save</button>
                             }
                             else
                             {
-                                <button class="btn btn-sm btn-info me-1 btn-fixed" @onclick="@(() => OnEditClicked(Item))">Edit</button>
+                                <button class="btn btn-sm btn-info me-1 btn-fixed" @onclick="@(() => onEditClicked(Item))">Edit</button>
                             }
                         }
 
                         @if (IsButtonDelete)
                         {
-                            <button class="btn btn-sm btn-danger btn-fixed" @onclick="@(() => OnDeleteClicked(Item))">Delete</button>
+                            <button class="btn btn-sm btn-danger btn-fixed" @onclick="@(() => onDeleteClicked(Item))">Delete</button>
                         }
                     </td>
                 }
@@ -117,7 +117,7 @@
 }
 else if (Items is not null)
 {
-    var props = GetPropertiesInOrder();
+    var props = getPropertiesInOrder();
 
     <table class="table table-bordered table-striped">
         <thead>
@@ -125,9 +125,9 @@ else if (Items is not null)
                 @foreach (var prop in props)
                 {
                     <th style="@getWidthStyle(prop.Name)">
-                        @if (IsSortable(prop))
+                        @if (isSortable(prop))
                         {
-                            <button class="btn btn-sm btn-link p-0" @onclick="@(() => ToggleSort(prop.Name))">
+                            <button class="btn btn-sm btn-link p-0" @onclick="@(() => toggleSort(prop.Name))">
                                 @prop.Name
                                 @(SortColumn == prop.Name ? (SortAscending ? "▲" : "▼") : "")
                             </button>
@@ -147,7 +147,7 @@ else if (Items is not null)
                 @foreach (var prop in props)
                 {
                     <th>
-                        @if (IsFilterable(prop))
+                        @if (isFilterable(prop))
                         {
                             <input class="form-control form-control-sm"
                                    placeholder="Filtrovat..."
@@ -183,8 +183,8 @@ else if (Items is not null)
                                 <td>
                                     <input type="text"
                                            class="form-control tall-input"
-                                           value="@GetPropertyValueAsString(item, prop)"
-                                           @oninput="(e => SetPropertyValue(item, prop, e.Value?.ToString()))" />
+                                           value="@getPropertyValueAsString(item, prop)"
+                                           @oninput="(e => setPropertyValue(item, prop, e.Value?.ToString()))" />
                                 </td>
                             }
                             else
@@ -216,16 +216,16 @@ else if (Items is not null)
                             {
                                 @if (isEdit(item))
                                 {
-                                    <button class="btn btn-sm btn-success me-1 btn-fixed" @onclick="@(() => OnSaveClicked(item))">Save</button>
+                                    <button class="btn btn-sm btn-success me-1 btn-fixed" @onclick="@(() => onSaveClicked(item))">Save</button>
                                 }
                                 else
                                 {
-                                    <button class="btn btn-sm btn-info me-1 btn-fixed" @onclick="@(() => OnEditClicked(item))">Edit</button>
+                                    <button class="btn btn-sm btn-info me-1 btn-fixed" @onclick="@(() => onEditClicked(item))">Edit</button>
                                 }
                             }
                             @if (IsButtonDelete)
                             {
-                                <button class="btn btn-sm btn-danger btn-fixed" @onclick="@(() => OnDeleteClicked(item))">Delete</button>
+                                <button class="btn btn-sm btn-danger btn-fixed" @onclick="@(() => onDeleteClicked(item))">Delete</button>
                             }
                         </td>
                     }
@@ -250,13 +250,13 @@ else if (Items is not null)
 
     private Dictionary<string, string> FilterTexts = new();
 
-    string GetPropertyValueAsString(object item, PropertyInfo prop)
+    private string getPropertyValueAsString(object item, PropertyInfo prop)
     {
         var value = prop.GetValue(item);
         return value?.ToString() ?? string.Empty;
     }
 
-    void SetPropertyValue(object item, PropertyInfo prop, string newValue)
+    private void setPropertyValue(object item, PropertyInfo prop, string newValue)
     {
         if (prop.PropertyType == typeof(string))
         {
@@ -276,7 +276,7 @@ else if (Items is not null)
     }
 
 
-    private PropertyInfo[] GetPropertiesInOrder()
+    private PropertyInfo[] getPropertiesInOrder()
     {
         var allProps = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
@@ -325,13 +325,13 @@ else if (Items is not null)
             _expanded.Remove(key);
     }
 
-    private bool IsSortable(PropertyInfo prop)
+    private bool isSortable(PropertyInfo prop)
     {
         var type = prop.PropertyType;
         return type.IsPrimitive || type == typeof(string) || type == typeof(DateTime) || type == typeof(decimal);
     }
 
-    private bool IsFilterable(PropertyInfo prop) => IsSortable(prop);
+    private bool isFilterable(PropertyInfo prop) => isSortable(prop);
 
     private string getWidthStyle(string propName)
     {
@@ -340,13 +340,13 @@ else if (Items is not null)
         return "";
     }
 
-    private async Task OnEditClicked(T item)
+    private async Task onEditClicked(T item)
     {
         var itemMod = (IDynamicTableItem)item;
         itemMod.IsEdit = true;
     }
 
-    private async Task OnSaveClicked(T item)
+    private async Task onSaveClicked(T item)
     {
         if (OnSave.HasDelegate)
         {
@@ -356,16 +356,16 @@ else if (Items is not null)
         }
     }
 
-    private async Task OnDeleteClicked(T item)
+    private async Task onDeleteClicked(T item)
     {
         if (OnDelete.HasDelegate)
             await OnDelete.InvokeAsync(item);
     }
 
-    private void ToggleSort(string column)
+    private void toggleSort(string column)
     {
-        var prop = GetPropertiesInOrder().FirstOrDefault(p => p.Name == column);
-        if (prop == null || !IsSortable(prop))
+        var prop = getPropertiesInOrder().FirstOrDefault(p => p.Name == column);
+        if (prop == null || !isSortable(prop))
             return;
 
         if (SortColumn == column)
@@ -387,7 +387,7 @@ else if (Items is not null)
         // Filtrování
         foreach (var filter in FilterTexts)
         {
-            var prop = props.FirstOrDefault(p => p.Name == filter.Key && IsFilterable(p));
+            var prop = props.FirstOrDefault(p => p.Name == filter.Key && isFilterable(p));
             if (prop != null && !string.IsNullOrWhiteSpace(filter.Value))
             {
                 string text = filter.Value.ToLowerInvariant();
@@ -402,7 +402,7 @@ else if (Items is not null)
         // Řazení
         if (!string.IsNullOrEmpty(SortColumn))
         {
-            var prop = props.FirstOrDefault(p => p.Name == SortColumn && IsSortable(p));
+            var prop = props.FirstOrDefault(p => p.Name == SortColumn && isSortable(p));
             if (prop != null)
             {
                 result = SortAscending
