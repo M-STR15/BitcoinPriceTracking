@@ -115,8 +115,9 @@ Dodatečné info
 - ⚠ – Důležitá -> ovlivňující mnoho uživatelů
 - 🛑 – Zásadní
 - 🚨 – Bezpečnostní
-
-
+***
+### 0.3.0   (2025-10-21)
+- 🚀 přidaná možnost editování poznámek k záznamu přímo v tabulce
 ***
 ### 0.2.0   (2025-10-20)
 - 🚀 přidání nové zobracování loaderu při načítání dat
