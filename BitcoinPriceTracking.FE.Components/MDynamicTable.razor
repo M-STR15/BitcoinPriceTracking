@@ -11,8 +11,16 @@
 
     .tall-input {
         height: 40px;
-        padding: 6px 12px; /* volitelné, aby text nebyl u okrajů */
-        font-size: 16px; /* volitelné, větší text */
+        padding: 6px 12px;
+        font-size: 16px;
+    }
+
+    .input-invalid {
+        border-color: #dc3545 !important;
+    }
+
+    .text-danger {
+        font-size: 0.85rem;
     }
 </style>
 
@@ -25,23 +33,41 @@
             <tr>
                 @foreach (var prop in props)
                 {
-                    @if (isSortable(prop))
-                    {
-                        <th style="@getWidthStyle(prop.Name)">
+                    <th style="@getWidthStyle(prop.Name)">
+                        @if (isSortable(prop))
+                        {
                             <button class="btn btn-sm btn-link p-0" @onclick="@(() => toggleSort(prop.Name))">
                                 @prop.Name
                                 @(SortColumn == prop.Name ? (SortAscending ? "▲" : "▼") : "")
                             </button>
-                        </th>
-                    }
-                    else
-                    {
-                        <th>@prop.Name</th>
-                    }
+                        }
+                        else
+                        {
+                            @prop.Name
+                        }
+                    </th>
                 }
                 @if (IsButtonSave || IsButtonDelete)
                 {
                     <th>Akce</th>
+                }
+            </tr>
+            <tr>
+                @foreach (var prop in props)
+                {
+                    <th>
+                        @if (isFilterable(prop))
+                        {
+                            <input class="form-control form-control-sm"
+                                   placeholder="Filtrovat..."
+                                   value="@GetFilterValue(prop.Name)"
+                                   @oninput="(e => OnFilterChanged(prop.Name, e.Value?.ToString()))" />
+                        }
+                    </th>
+                }
+                @if (IsButtonSave || IsButtonDelete)
+                {
+                    <th></th>
                 }
             </tr>
         </thead>
@@ -51,7 +77,6 @@
                 {
                     var value = prop.GetValue(Item);
                     bool hasNested = value != null && !(value.GetType().IsPrimitive || value is string || value is DateTime);
-                    string key = $"{Item.GetHashCode()}_{prop.Name}";
 
                     if (value is null)
                     {
@@ -61,11 +86,18 @@
                     {
                         @if (IsPropertyEditable<T>(prop.Name) && isEdit(Item))
                         {
+                            bool hasError = _validationErrors.ContainsKey(prop.Name);
+                            string css = hasError ? "form-control tall-input input-invalid" : "form-control tall-input";
+
                             <td>
                                 <input type="text"
-                                       class="form-control tall-input"
+                                       class="@css"
                                        value="@getPropertyValueAsString(Item, prop)"
                                        @oninput="(e => setPropertyValue(Item, prop, e.Value?.ToString()))" />
+                                @if (hasError)
+                                {
+                                    <div class="text-danger">@_validationErrors[prop.Name]</div>
+                                }
                             </td>
                         }
                         else
@@ -77,13 +109,13 @@
                     {
                         <td>
                             <div>
-                                <button class="btn btn-sm btn-outline-primary" @onclick="@(() => toggle(key))">
-                                    @(isExpanded(key) ? "▼ Sbalit" : "▶ Rozbalit")
+                                <button class="btn btn-sm btn-outline-primary" @onclick="@(() => toggle(prop.Name))">
+                                    @(isExpanded(prop.Name) ? "▼ Sbalit" : "▶ Rozbalit")
                                 </button>
 
-                                @if (isExpanded(key))
+                                @if (isExpanded(prop.Name))
                                 {
-                                    <MTableForProperty Item="value" ColumnOrder="ColumnOrder" ColumnWidths="ColumnWidths" />
+                                    <MTableForProperty Item="value" />
                                 }
                             </div>
                         </td>
@@ -97,7 +129,7 @@
                         {
                             @if (isEdit(Item))
                             {
-                                <button class="btn btn-sm btn-success me-1 btn-fixed" @onclick="@(() => onSaveClicked(Item))">Save</button>
+                                <button class="btn btn-sm btn-success me-1 btn-fixed" disabled="@(!isItemValid(Item))" @onclick="@(() => onSaveClicked(Item))">Save</button>
                             }
                             else
                             {
@@ -170,7 +202,7 @@ else if (Items is not null)
                     {
                         var value = prop.GetValue(item);
                         bool hasNested = value != null && !(value.GetType().IsPrimitive || value is string || value is DateTime);
-                        string key = $"{item.GetHashCode()}_{prop.Name}";
+                        var key = $"{item.GetHashCode()}_{prop.Name}";
 
                         if (value is null)
                         {
@@ -180,11 +212,18 @@ else if (Items is not null)
                         {
                             @if (IsPropertyEditable<T>(prop.Name) && isEdit(item))
                             {
+                                _validationErrors.TryGetValue(key, out var error);
+                                string css = string.IsNullOrEmpty(error) ? "form-control tall-input" : "form-control tall-input input-invalid";
+
                                 <td>
                                     <input type="text"
-                                           class="form-control tall-input"
+                                           class="@css"
                                            value="@getPropertyValueAsString(item, prop)"
-                                           @oninput="(e => setPropertyValue(item, prop, e.Value?.ToString()))" />
+                                           @oninput="(e => onInputChanged(item, prop, e.Value?.ToString()))" />
+                                    @if (!string.IsNullOrEmpty(error))
+                                    {
+                                        <div class="text-danger">@error</div>
+                                    }
                                 </td>
                             }
                             else
@@ -202,7 +241,7 @@ else if (Items is not null)
 
                                     @if (isExpanded(key))
                                     {
-                                        <MTableForProperty Item="value" />
+                                        <MTableForProperty Item="value"  />
                                     }
                                 </div>
                             </td>
@@ -216,13 +255,14 @@ else if (Items is not null)
                             {
                                 @if (isEdit(item))
                                 {
-                                    <button class="btn btn-sm btn-success me-1 btn-fixed" @onclick="@(() => onSaveClicked(item))">Save</button>
+                                    <button class="btn btn-sm btn-success me-1 btn-fixed" disabled="@(!isItemValid(item))" @onclick="@(() => onSaveClicked(item))">Save</button>
                                 }
                                 else
                                 {
                                     <button class="btn btn-sm btn-info me-1 btn-fixed" @onclick="@(() => onEditClicked(item))">Edit</button>
                                 }
                             }
+
                             @if (IsButtonDelete)
                             {
                                 <button class="btn btn-sm btn-danger btn-fixed" @onclick="@(() => onDeleteClicked(item))">Delete</button>

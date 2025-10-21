@@ -129,6 +129,9 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		[HttpPost("api/v1/crypto-data")]
 		public async Task<ActionResult<CryptoDataBaseDTO>> AddCryptoDataAsync([FromBody] CryptoDataBaseDTO cryptoDataDto)
 		{
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState); // vrátí 400 s chybami validace
+
 			try
 			{
 				var cryptoData = _mapper.Map<CryptoData>(cryptoDataDto);
@@ -149,46 +152,40 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 			}
 		}
-
 		#endregion POST
 
 		#region PUT
-
 		/// <summary>
-		/// Uloží upravenou poznámku ke kryptoměnovým datům podle zadaného ID.
+		/// Uloží nebo aktualizuje poznámku ke kryptoměnovým datům podle zadaného ID.
 		/// </summary>
-		/// <param name="cruptoDataNoteId">ID poznámky, která má být upravena.</param>
-		/// <param name="cryptoDataNoteDto">DTO objekt s upravenými daty poznámky.</param>
+		/// <param name="cruptoDataNoteId">ID poznámky ke kryptoměnovým datům, která má být uložena nebo aktualizována.</param>
+		/// <param name="cryptoDataNoteDto">DTO objekt s upravenou poznámkou.</param>
 		/// <returns>
 		/// 200 OK s <see cref="CryptoDataNoteBaseDTO"/> pokud byla poznámka úspěšně uložena,
 		/// 400 Bad Request pokud je vstup neplatný,
-		/// nebo 500 Internal Server Error při výjimce.
+		/// 404 Not Found pokud poznámka neexistuje,
+		/// nebo 500 Internal Server Error při chybě.
 		/// </returns>
 		[HttpPut("api/v1/crypto-data-note/{cruptoDataNoteId}")]
 		public async Task<ActionResult<CryptoDataNoteBaseDTO>> SaveCryptoDataNoteAsync(int cruptoDataNoteId, [FromBody] CryptoDataNoteEditDTO cryptoDataNoteDto)
 		{
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState); // vrátí 400 s chybami validace
+
 			try
 			{
 				var cryptodataOrig = await _coindeskRepositories.GetCryptoDataNoteAsync(cruptoDataNoteId);
+				if (cryptodataOrig == null)
+					return NotFound();
+
 				cryptodataOrig.Note = cryptoDataNoteDto.Note;
 
-				if (cryptodataOrig != null)
-				{
-					var result = await _coindeskRepositories.UpdateCryptoDataNoteAsync(cryptodataOrig);
-					if (result != null && _mapper != null)
-					{
-						cryptoDataNoteDto = _mapper.Map<CryptoDataNoteBaseDTO>(result);
-						return result != null ? Ok(cryptoDataNoteDto) : Problem();
-					}
-					else
-					{
-						return Problem();
-					}
-				}
-				else
-				{
-					return BadRequest();
-				}
+				var result = await _coindeskRepositories.UpdateCryptoDataNoteAsync(cryptodataOrig);
+				if (result == null)
+					return Problem();
+
+				var dto = _mapper.Map<CryptoDataNoteBaseDTO>(result);
+				return Ok(dto);
 			}
 			catch (Exception ex)
 			{
