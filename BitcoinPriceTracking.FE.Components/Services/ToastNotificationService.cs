@@ -14,7 +14,6 @@ namespace BitcoinPriceTracking.FE.Components.Services
 
 		private List<Notification> _notifications = new();
 
-
 		public ToastNotificationService()
 		{
 			_timerRemove = new Timer(removeNotificationTick, null, 1000, 1);
@@ -40,13 +39,13 @@ namespace BitcoinPriceTracking.FE.Components.Services
 
 			NotifyStateChanged();
 		}
+
 		/// <summary>
 		/// Vrací seznam aktuálních notifikací.
 		/// Komponenty mohou tento seznam použít k zobrazení notifikací uživateli.
 		/// Seznam je pouze pro čtení.
 		/// </summary>
 		public IEnumerable<Notification> Notifications => _notifications;
-
 
 		///<summary>
 		/// Přidá novou notifikaci do seznamu a upozorní odběratele na změnu stavu.

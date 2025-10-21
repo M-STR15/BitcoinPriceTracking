@@ -2,7 +2,6 @@
 
 namespace BitcoinPriceTracking.BE.BusinessLogic.Models
 {
-
 	// NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 	/// <remarks/>
 	[System.SerializableAttribute()]
@@ -11,7 +10,6 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Models
 	[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
 	public partial class kurzy : Ikurzy
 	{
-
 		private kurzyTabulka tabulkaField;
 
 		private string bankaField;

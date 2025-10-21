@@ -11,6 +11,7 @@ namespace BitcoinPriceTracking.Modals.Models
 		protected IHttpClientFactory _httpClientFactory { get; set; }
 
 		private bool _visible;
+
 		[Parameter, EditorRequired]
 		public virtual bool Visible
 		{
@@ -25,8 +26,10 @@ namespace BitcoinPriceTracking.Modals.Models
 				}
 			}
 		}
+
 		[Parameter, EditorRequired]
 		public virtual EventCallback<bool> VisibleChanged { get; set; }
+
 		[Parameter, EditorRequired]
 		public virtual string Title { get; set; } = string.Empty;
 

@@ -28,7 +28,6 @@ namespace BitcoinPriceTracking.BE.Shared.Services
 #endif
 		}
 
-
 		public void LogFatal(Guid guidId, Exception exception, string? message = null, object? inputObject = null)
 		{
 			if (inputObject != null)
@@ -37,7 +36,6 @@ namespace BitcoinPriceTracking.BE.Shared.Services
 			var eventLog = getEventLog(guidId, exception, message);
 			Log.Fatal("{@EventLog}", eventLog);
 		}
-
 
 		/// <summary>
 		/// Loguje chybu
@@ -80,8 +78,6 @@ namespace BitcoinPriceTracking.BE.Shared.Services
 			var eventLog = getEventLog(guidId, exception, message);
 			Log.Information("{@EventLog}", eventLog);
 		}
-
-
 
 		public void LogDebug(Guid guidId, Exception exception, string? message = null, object? inputObject = null)
 		{

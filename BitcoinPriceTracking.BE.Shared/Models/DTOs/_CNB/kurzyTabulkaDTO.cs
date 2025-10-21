@@ -1,9 +1,7 @@
-﻿
-namespace BitcoinPriceTracking.BE.Shared.Interfaces.Models
+﻿namespace BitcoinPriceTracking.BE.Shared.Interfaces.Models
 {
 	public partial class kurzyTabulkaDTO : IkurzyTabulka
 	{
-
 		private kurzyTabulkaRadek[] radekField;
 
 		private string typField;
@@ -32,5 +30,4 @@ namespace BitcoinPriceTracking.BE.Shared.Interfaces.Models
 			}
 		}
 	}
-
 }

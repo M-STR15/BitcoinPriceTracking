@@ -1,13 +1,11 @@
 using BitcoinPriceTracking.BE.BusinessLogic.Infrastructure;
 using BitcoinPriceTracking.BE.DB.DataAccess;
 using BitcoinPriceTracking.BE.Shared.Infrastructure;
-using BitcoinPriceTracking.Data;
+using BitcoinPriceTracking.FE.Components.Infrastructure;
 using BitcoinPriceTracking.MappingProfiles;
 using Microsoft.OpenApi.Models;
-using BitcoinPriceTracking.FE.Components.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddHttpClient("ApiClient", (sp, client) =>
@@ -60,7 +58,6 @@ builder.Services.AddSwaggerGen(options =>
 		Version = "v1",
 		Description = ""
 	});
-
 });
 
 var app = builder.Build();

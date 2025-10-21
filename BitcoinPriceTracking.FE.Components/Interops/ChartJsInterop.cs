@@ -20,8 +20,7 @@ namespace BitcoinPriceTracking.FE.Components.Interops
 		{
 			var module = await _moduleTask.Value;
 			await module.InvokeVoidAsync("setup", canvasRef, config, dotNetRef);
-		}	
-
+		}
 
 		public async ValueTask DisposeAsync()
 		{

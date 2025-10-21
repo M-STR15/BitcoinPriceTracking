@@ -29,7 +29,8 @@ namespace BitcoinPriceTracking.FE.Components
 		public int NumberNotification { get; set; } = 0;
 
 		private string _disabledStyle => IsDisabled ? "pointer-events: none; opacity: 0.5;" : "";
-		[Parameter] 
+
+		[Parameter]
 		public RenderFragment? ChildContent { get; set; }
 
 		private EventCallback getOnClickCallback()

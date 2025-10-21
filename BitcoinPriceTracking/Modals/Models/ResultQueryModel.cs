@@ -10,6 +10,6 @@
 		public object? Model
 		{
 			get; set;
-		} 
+		}
 	}
 }

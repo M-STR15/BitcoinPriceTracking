@@ -5,7 +5,9 @@ namespace BitcoinPriceTracking.BE.DB.DataAccess
 {
 	public class MsSqlDbContext : MainDatacontext
 	{
-		public MsSqlDbContext(DbContextOptions<MsSqlDbContext> options) : base(options) { }
+		public MsSqlDbContext(DbContextOptions<MsSqlDbContext> options) : base(options)
+		{
+		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

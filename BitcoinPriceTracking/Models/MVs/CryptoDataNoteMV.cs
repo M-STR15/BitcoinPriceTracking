@@ -3,7 +3,7 @@ using BitcoinPriceTracking.FE.Components.Interfaces;
 
 namespace BitcoinPriceTracking.Models.MVs
 {
-	public class CryptoDataNoteMV: CryptoDataNoteDTO, IDynamicTableItem
+	public class CryptoDataNoteMV : CryptoDataNoteDTO, IDynamicTableItem
 	{
 		public bool IsEdit
 		{

@@ -38,6 +38,7 @@
 		{
 			DeleteTimeForSeconds = deleteTimeForSeconds;
 		}
+
 		private string createText(int time, string unit)
 		{
 			if (unit == "s")

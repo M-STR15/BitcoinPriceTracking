@@ -14,6 +14,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 	{
 		private readonly CryptoDataStory _cryptoDataStory;
 		private readonly ICoindeskRepository _coindeskRepositories;
+
 		public CryptoDataController(IMapper mapper, IEventLogService eventLogService, CnbStory cnbStory, CryptoDataStory cryptoDataStory, ICoindeskRepository coindeskRepositories) : base(mapper, eventLogService)
 		{
 			_cryptoDataStory = cryptoDataStory;
@@ -21,6 +22,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		}
 
 		#region GET
+
 		/// <summary>
 		/// Získá aktuální data o Bitcoinu z bufferu (BTC-EUR).
 		/// </summary>
@@ -114,6 +116,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		#endregion GET
 
 		#region POST
+
 		/// <summary>
 		/// Přidá nová data o kryptoměně do databáze.
 		/// </summary>
@@ -146,8 +149,10 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 			}
 		}
+
 		#endregion POST
-		#region PUT	
+
+		#region PUT
 
 		/// <summary>
 		/// Uloží upravenou poznámku ke kryptoměnovým datům podle zadaného ID.
@@ -167,7 +172,6 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 				var cryptodataOrig = await _coindeskRepositories.GetCryptoDataNoteAsync(cruptoDataNoteId);
 				cryptodataOrig.Note = cryptoDataNoteDto.Note;
 
-				
 				if (cryptodataOrig != null)
 				{
 					var result = await _coindeskRepositories.UpdateCryptoDataNoteAsync(cryptodataOrig);
@@ -192,9 +196,11 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 			}
 		}
+
 		#endregion PUT
 
 		#region DELETE
+
 		/// <summary>
 		/// Smaže záznam o kryptoměně podle zadaného ID.
 		/// </summary>
@@ -217,6 +223,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 			}
 		}
+
 		#endregion DELETE
 	}
 }

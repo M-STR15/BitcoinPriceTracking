@@ -1,6 +1,5 @@
 ﻿using BitcoinPriceTracking.BE.BusinessLogic.Models;
 using BitcoinPriceTracking.BE.BusinessLogic.Stories;
-using BitcoinPriceTracking.BE.Shared.Interfaces.Models;
 using BitcoinPriceTracking.BE.Shared.Services;
 using Microsoft.Extensions.Hosting;
 using System.Xml.Serialization;

@@ -13,6 +13,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 	{
 		protected readonly IEventLogService _eventLogService;
 		protected readonly IMapper _mapper;
+
 		public aControllerBase(IMapper mapper, IEventLogService eventLogService)
 		{
 			_mapper = mapper;

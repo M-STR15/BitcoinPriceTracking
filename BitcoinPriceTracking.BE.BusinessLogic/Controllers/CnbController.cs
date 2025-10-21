@@ -13,6 +13,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 	{
 		private readonly CnbStory _cnbStory;
 		private readonly ICoindeskRepository _coindeskRepository;
+
 		public CnbController(IMapper mapper, IEventLogService eventLogService, CnbStory cnbStory, ICoindeskRepository coindeskRepository) : base(mapper, eventLogService)
 		{
 			_cnbStory = cnbStory;

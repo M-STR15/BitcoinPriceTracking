@@ -11,12 +11,15 @@ namespace BitcoinPriceTracking.BE.DB.Models.Entities
 	{
 		[Key]
 		public int Id { get; set; }
+
 		public virtual CryptoDataNote? CryptoDataNote { get; set; } = null!;
 
 		public string BASE { get; set; }
+
 		[Column("BASE_ID")]
 		[Comment("test")]
 		public double BASE_ID { get; set; }
+
 		public double BEST_ASK { get; set; }
 		public double BEST_ASK_LAST_UPDATE_TS { get; set; }
 		public double BEST_ASK_LAST_UPDATE_TS_NS { get; set; }
@@ -265,7 +268,6 @@ namespace BitcoinPriceTracking.BE.DB.Models.Entities
 
 		public CryptoData() : base()
 		{
-
 		}
 	}
 }

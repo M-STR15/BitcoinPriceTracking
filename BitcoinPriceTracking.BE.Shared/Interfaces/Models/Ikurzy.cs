@@ -1,6 +1,4 @@
-﻿using BitcoinPriceTracking.BE.BusinessLogic.Models;
-
-namespace BitcoinPriceTracking.BE.Shared.Interfaces.Models
+﻿namespace BitcoinPriceTracking.BE.Shared.Interfaces.Models
 {
 	public interface Ikurzy
 	{

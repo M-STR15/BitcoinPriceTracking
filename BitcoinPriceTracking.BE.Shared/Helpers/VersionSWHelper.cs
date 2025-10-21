@@ -1,5 +1,4 @@
-﻿using BitcoinPriceTracking.BE.Shared.Models;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace BitcoinPriceTracking.BE.Shared.Helpers
 {
@@ -7,7 +6,6 @@ namespace BitcoinPriceTracking.BE.Shared.Helpers
 	{
 		public static string GetVersionSW()
 		{
-
 			//var assembly = Assembly.GetExecutingAssembly();
 			//var version = FileVersionInfo.GetVersionInfo(assembly.Location);
 			var version = Assembly.GetEntryAssembly()?.GetName()?.Version;

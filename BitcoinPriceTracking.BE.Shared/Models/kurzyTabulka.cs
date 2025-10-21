@@ -6,7 +6,6 @@
 	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
 	public partial class kurzyTabulka : IkurzyTabulka
 	{
-
 		private kurzyTabulkaRadek[] radekField;
 
 		private string typField;
@@ -39,5 +38,4 @@
 			}
 		}
 	}
-
 }

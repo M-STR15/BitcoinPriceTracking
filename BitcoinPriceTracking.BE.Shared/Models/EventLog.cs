@@ -10,6 +10,7 @@ namespace BitcoinPriceTracking.BE.Shared.Models
 		public Guid GuidId { get; set; }
 		public string Message { get; set; } = string.Empty;
 		private Exception? _exception;
+
 		public Exception? Exception
 		{
 			get => _exception;

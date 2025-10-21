@@ -28,7 +28,7 @@ namespace BitcoinPriceTracking.BE.DB.Infrastructure
 			});
 
 			services.AddScoped<Func<TContext>>(provider => () => provider.GetRequiredService<TContext>());
-			services.AddScoped<ICoindeskRepository,CoindeskRepository<TContext>>();
+			services.AddScoped<ICoindeskRepository, CoindeskRepository<TContext>>();
 
 			// Automatické vytvoření databáze
 			using (var serviceProvider = services.BuildServiceProvider())

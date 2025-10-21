@@ -253,5 +253,4 @@ namespace BitcoinPriceTracking.BE.Shared.Models.DTOs
 		public double LIFETIME_CHANGE { get; set; }
 		public double LIFETIME_CHANGE_PERCENTAGE { get; set; }
 	}
-
 }

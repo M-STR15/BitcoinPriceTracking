@@ -6,7 +6,6 @@ namespace BitcoinPriceTracking.BE.DB.Repositories
 	{
 		public CnbRepository(Func<T> contextFactory) : base(contextFactory)
 		{
-
 		}
 	}
 }

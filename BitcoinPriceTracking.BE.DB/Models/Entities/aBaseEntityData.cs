@@ -3,7 +3,7 @@
 	public abstract class aBaseEntityData
 	{
 		/// <summary>
-		/// Ćasové razítko vytvoření záznamu. 
+		/// Ćasové razítko vytvoření záznamu.
 		/// </summary>
 		/// <remarks>
 		/// Ukládáno v UTC formátu.

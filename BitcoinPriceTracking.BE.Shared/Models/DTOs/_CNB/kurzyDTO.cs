@@ -1,9 +1,7 @@
-﻿
-namespace BitcoinPriceTracking.BE.Shared.Interfaces.Models
+﻿namespace BitcoinPriceTracking.BE.Shared.Interfaces.Models
 {
 	public partial class kurzyDTO : Ikurzy
 	{
-
 		private kurzyTabulka tabulkaField;
 
 		private string bankaField;

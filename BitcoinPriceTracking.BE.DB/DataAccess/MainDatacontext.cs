@@ -12,7 +12,6 @@ namespace BitcoinPriceTracking.BE.DB.DataAccess
 
 		public MainDatacontext(DbContextOptions options) : base(options)
 		{
-
 		}
 	}
 }

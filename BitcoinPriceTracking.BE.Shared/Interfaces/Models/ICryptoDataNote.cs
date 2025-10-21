@@ -1,5 +1,4 @@
-﻿
-namespace BitcoinPriceTracking.BE.DB.Models.Entities
+﻿namespace BitcoinPriceTracking.BE.DB.Models.Entities
 {
 	public interface ICryptoDataNoteBase
 	{

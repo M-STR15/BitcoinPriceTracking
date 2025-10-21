@@ -6,7 +6,6 @@ namespace BitcoinPriceTracking.FE.Components
 {
 	public partial class MToast
 	{
-
 		[Inject]
 		private ToastNotificationService? _notificationService { get; set; }
 

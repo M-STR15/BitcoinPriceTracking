@@ -45,7 +45,6 @@
 			await Task.Run(() => LogWarning(guidId, exception, null, inputObject));
 		}
 
-
 		/// <summary>
 		/// Loguje informaci
 		/// </summary>
@@ -78,6 +77,5 @@
 		{
 			await Task.Run(() => LogInformation(guidId, exception, null, inputObject));
 		}
-
 	}
 }

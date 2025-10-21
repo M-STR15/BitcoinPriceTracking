@@ -1,7 +1,7 @@
 ﻿const chartStore = new WeakMap();
 console.log("✅ mchart.js loaded");
 
-/**     
+/**
  * @param {HTMLCanvasElement} canvas - DOM prvek z Blazoru (ElementReference)
  * @param {object} config - konfigurace grafu
  * @param {DotNetObjectReference<MChart>} dotNetRef - reference na MChart
