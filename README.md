@@ -115,6 +115,11 @@ Dodatečné info
 - ⚠ – Důležitá -> ovlivňující mnoho uživatelů
 - 🛑 – Zásadní
 - 🚨 – Bezpečnostní
+
+***
+### 0.4.0   (2025-10-22)
+- 🚀 přidání validování formuláře 
+- 🚀 přidání validování REST API
 ***
 ### 0.3.0   (2025-10-21)
 - 🚀 přidaná možnost editování poznámek k záznamu přímo v tabulce
