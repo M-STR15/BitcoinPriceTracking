@@ -6,6 +6,7 @@ using BitcoinPriceTracking.BE.Shared.Models.DTOs;
 using BitcoinPriceTracking.BE.Shared.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 {
@@ -126,6 +127,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		/// 400 Bad Request pokud je vstup neplatný,
 		/// nebo 500 Internal Server Error při výjimce.
 		/// </returns>
+		[SwaggerResponse(400, "Vstup je neplatný.[Další informace](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/400)")]
 		[HttpPost("api/v1/crypto-data")]
 		public async Task<ActionResult<CryptoDataBaseDTO>> AddCryptoDataAsync([FromBody] CryptoDataBaseDTO cryptoDataDto)
 		{
@@ -166,6 +168,7 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 		/// 404 Not Found pokud poznámka neexistuje,
 		/// nebo 500 Internal Server Error při chybě.
 		/// </returns>
+		[SwaggerResponse(400, "Vstup je neplatný.[Další informace](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/400)")]
 		[HttpPut("api/v1/crypto-data-note/{cruptoDataNoteId}")]
 		public async Task<ActionResult<CryptoDataNoteBaseDTO>> SaveCryptoDataNoteAsync(int cruptoDataNoteId, [FromBody] CryptoDataNoteEditDTO cryptoDataNoteDto)
 		{
