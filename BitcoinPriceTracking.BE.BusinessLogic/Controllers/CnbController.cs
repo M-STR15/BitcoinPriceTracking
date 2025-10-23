@@ -12,12 +12,10 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 	public class CnbController : aControllerBase
 	{
 		private readonly CnbStory _cnbStory;
-		private readonly ICoindeskRepository _coindeskRepository;
 
-		public CnbController(IMapper mapper, IEventLogService eventLogService, CnbStory cnbStory, ICoindeskRepository coindeskRepository) : base(mapper, eventLogService)
+		public CnbController(IMapper mapper, IEventLogService eventLogService, CnbStory cnbStory) : base(mapper, eventLogService)
 		{
 			_cnbStory = cnbStory;
-			_coindeskRepository = coindeskRepository;
 		}
 
 		/// <summary>
@@ -41,23 +39,5 @@ namespace BitcoinPriceTracking.BE.BusinessLogic.Controllers
 				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 			}
 		}
-
-		//[HttpGet("api/v1/cnb-data")]
-		//public async Task<ActionResult<IEnumerable<CryptoDataNoteDTO>>> GetCnbDataFromDatabaseAsync()
-		//{
-		//	try
-		//	{
-		//		var cryptoDataNotes = _coindeskRepository.GetCryptoDataNotesAsync();
-		//		if (cryptoDataNotes != null)
-		//			return cryptoDataNotes != null ? Ok(cryptoDataNotes) : BadRequest();
-		//		else
-		//			return NotFound();
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		_eventLogService.LogError(Guid.Parse("855d8115-aafc-40ed-b542-2e866a139a67"), ex);
-		//		return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-		//	}
-		//}
 	}
 }
