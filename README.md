@@ -117,6 +117,9 @@ Dodatečné info
 - 🚨 – Bezpečnostní
 
 ***
+### 0.4.1   (2025-10-25)
+- 🐞 oprava validace formuláře při ukládání poznámek k záznamu
+***
 ### 0.4.0   (2025-10-22)
 - 🚀 přidání validování formuláře 
 - 🚀 přidání validování REST API
