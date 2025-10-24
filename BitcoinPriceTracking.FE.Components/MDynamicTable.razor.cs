@@ -20,6 +20,7 @@ namespace BitcoinPriceTracking.FE.Components
 		[Parameter] public bool SortAscending { get; set; } = true;
 		[Parameter] public string? SortColumn { get; set; }
 		private PropertyInfo[] props { get => getPropertiesInOrder(); }
+		private Dictionary<int, T> _originalItems = new();
 
 		public static bool IsPropertyEditable<T>(string propertyName)
 		{
@@ -141,7 +142,50 @@ namespace BitcoinPriceTracking.FE.Components
 			var itemMod = (IDynamicTableItem)item;
 			if (itemMod != null)
 				itemMod.IsEdit = true;
+
+			int key = item.GetHashCode();
+			if (!_originalItems.ContainsKey(key))
+				_originalItems[key] = cloneItem(item);
+
 			validationPropsAndUpdateError(item);
+		}
+
+		private T cloneItem(T source)
+		{
+			var clone = Activator.CreateInstance<T>();
+			foreach (var prop in props)
+			{
+				if (prop.CanWrite)
+					prop.SetValue(clone, prop.GetValue(source));
+			}
+			return clone;
+		}
+
+		private void restoreItemValues(T target, T source)
+		{
+			foreach (var prop in props)
+			{
+				if (prop.CanWrite)
+					prop.SetValue(target, prop.GetValue(source));
+			}
+		}
+
+		private async Task onCancelClicked(T item)
+		{
+			int key = item.GetHashCode();
+
+			if (_originalItems.TryGetValue(key, out var original))
+			{
+				restoreItemValues(item, original);
+				_originalItems.Remove(key);
+			}
+
+			var itemMod = (IDynamicTableItem)item;
+			if (itemMod != null)
+				itemMod.IsEdit = false;
+
+			validationPropsAndUpdateError(item);
+			await Task.CompletedTask;
 		}
 
 		private void onFilterChanged(string propName, string? value)
