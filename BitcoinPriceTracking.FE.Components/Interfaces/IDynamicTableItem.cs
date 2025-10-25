@@ -2,6 +2,6 @@
 {
 	public interface IDynamicTableItem
 	{
-		bool IsEdit { get; set; }
+		bool IsBeingEdited { get; set; }
 	}
 }

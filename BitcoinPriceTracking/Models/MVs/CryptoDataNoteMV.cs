@@ -5,7 +5,7 @@ namespace BitcoinPriceTracking.Models.MVs
 {
 	public class CryptoDataNoteMV : CryptoDataNoteDTO, IDynamicTableItem
 	{
-		public bool IsEdit
+		public bool IsBeingEdited
 		{
 			get; set;
 		}

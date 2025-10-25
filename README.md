@@ -14,7 +14,7 @@ Tyto data je poté možné zobrazit a uložit.
 
 ## Authors
 
-- [@M-STR](https://github.com/M-STR15)
+[@M-STR](https://github.com/M-STR15)
 
 
 ## License
@@ -50,7 +50,7 @@ Tyto data je poté možné zobrazit a uložit.
 - Backend:
     - ASP.NET Core Web API
     - EF Core
-    - Logování-serilog
+    - Logování->serilog
     
 - Frontend:
     - Blazor

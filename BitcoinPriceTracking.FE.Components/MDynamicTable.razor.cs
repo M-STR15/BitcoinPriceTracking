@@ -113,7 +113,7 @@ namespace BitcoinPriceTracking.FE.Components
 		private bool isEdit(T item)
 		{
 			var conMod = (IDynamicTableItem)item;
-			return conMod.IsEdit;
+			return conMod.IsBeingEdited;
 		}
 
 		private bool isExpanded(string key) => _expanded.Contains(key);
@@ -141,7 +141,7 @@ namespace BitcoinPriceTracking.FE.Components
 		{
 			var itemMod = (IDynamicTableItem)item;
 			if (itemMod != null)
-				itemMod.IsEdit = true;
+				itemMod.IsBeingEdited = true;
 
 			int key = item.GetHashCode();
 			if (!_originalItems.ContainsKey(key))
@@ -182,7 +182,7 @@ namespace BitcoinPriceTracking.FE.Components
 
 			var itemMod = (IDynamicTableItem)item;
 			if (itemMod != null)
-				itemMod.IsEdit = false;
+				itemMod.IsBeingEdited = false;
 
 			validationPropsAndUpdateError(item);
 			await Task.CompletedTask;
@@ -217,7 +217,7 @@ namespace BitcoinPriceTracking.FE.Components
 				await OnSave.InvokeAsync(item);
 				var itemMod = (IDynamicTableItem)item;
 				if (itemMod != null)
-					itemMod.IsEdit = false;
+					itemMod.IsBeingEdited = false;
 			}
 		}
 
