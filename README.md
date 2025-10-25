@@ -1,101 +1,93 @@
 ﻿# BitcoinPriceTracking (ve vývoji)
 
-Aplikace slouží k načítání dat z API:
-- https://data-api.coindesk.com//cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.xml
-    
-    - tyto data se v BUFFEru aktualizují jednou za minutu
+💡 *Demonstrační aplikace pro sledování vývoje ceny Bitcoinu pomocí ASP.NET Core Web API, Blazoru a Entity Framework Core. Projekt slouží jako ukázka architektury, práce s daty z API, logování a nasazení webové aplikace s databází.*
+
+## Popis projektu
+
+Aplikace pravidelně načítá a ukládá data z veřejných API:
+
+- **Coindesk API:**[https://data-api.coindesk.com//cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.xml]
+ 
+ → Data se aktualizují v bufferu **jednou za minutu**.
   
-- https://www.cnb.cz//cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.xml
+- **ČNB API:** [https://www.cnb.cz//cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.xml]
   
     - tyto data se v BUFFEru aktualizují jednou za den
  
-Tyto data je poté možné zobrazit a uložit. 
+Načtená data lze následně zobrazit, filtrovat, třídit a ukládat do databáze.  
+Součástí je i možnost přidávat poznámky k jednotlivým záznamům.
 
+---
 
-## Authors
+## Použité technologie
 
-[@M-STR](https://github.com/M-STR15)
+### Backend
+- **ASP.NET Core Web API**
+- **Entity Framework Core** (Code First, migrační balíčky)
+- **Serilog** – logování událostí
+- **Swagger** – automaticky generovaná dokumentace API
 
+### Frontend
+- **Blazor** – responzivní webové rozhraní
+- **Bootstrap** – volitelný pro vzhled komponent
 
-## License
+### Databáze
+- **Microsoft SQL Server**  
+  - Databáze je vytvářena automaticky při prvním spuštění (EF Core migrations).  
+  - Připojovací řetězec (`ConnectionStringsMSSQL`) je uložen v `appsettings.json`.
 
-[MIT](https://choosealicense.com/licenses/mit/)
+---
+## Architektura
 
-## Technické požadavky
+Aplikace využívá vícevrstvou architekturu podle principů **MVC** a **SOLID**.  
+Projekt je rozdělen na samostatné části pro lepší přehlednost a údržbu:
 
-- Backend:
+# Solution
 
-   - ASP.NET Core Web API
-   - Entity Framework nebo EF Core
-   - Logování (např. Serilog, NLog)
+- **BE (backendová část)**
+  - **BusinessLogic** – controllery, služby, business logika
+  - **DB** – entity, kontext databáze
+  - **Shared** – DTO a sdílené objekty
 
-- Frontend:
+- **FE (frontendová část)**
+  - **Components** – Blazor komponenty
 
-   - ASP.NET WebForms / MVC / Blazor / Razor
-   - Bootstrap pro responzivní vzhled (volitelné)
-
-- Databáze:
-
-   - Microsoft SQL Server
-   = Součástí řešení bude T-SQL skript pro vytvoření tabulek a případných procedur
-
-- Architektura:
-
-   - Dodržujte principy SOLID
-   - Pište čitelný, srozumitelný a udržitelný kód
-   - Dbejte na oddělení business logiky od prezentační vrstvy
-
-## Použita technologie
-
-- Backend:
-    - ASP.NET Core Web API
-    - EF Core
-    - Logování->serilog
-    
-- Frontend:
-    - Blazor
-
-- Databáze:
-    - Microsoft SQL Server
-        - je vytvořená methodou Code first pomocí EF Core -> migračních balíčků
-
-- Architektura:
-    - Aplikace je psaná architekturou MVC
-    - Projekt je rozdělený na několik menších projektů pro lepší přehlednost a údržbu kódu.
-        - BE (backendová část)
-            - BusinessLogic
-                - zde se nachází kontrolery , služby a další logika aplikace
-                - controllery mají vytvořenou dokumentaci za pomocí SWAGGERu, který je dostupný po spuštění aplikace na /swagger/index.html
-                
-            - DB (databázová část))
-                - zde se nachází entity a kontext databáze
-            - Shared
-                - zde se nachází DTO a další sdílené objekty
-        - FE (frontendová část)
-            - Components
-                - zde se nachází komponenty aplikace
+---
 
 ## Nasazení
 
-- Spuštění přes vývojové prostředí VS2022
-    - Aplikace je vytvořena tak, aby v případě existence MS SQL serveru na lokálním počítači, tak se aplikace spustí bez dalších úprav. Pokud má uživatel přístup(možnost upravovat) do lokální databáze, tak se mu vytvoří databáze a tabulky automaticky při prvním spuštění aplikace.
-    - Aplikaci stačí sputit buď přes F5 nebo Ctrl+F5.
-    
-## Poznámky k aplikaci
-   - aplikace vznikla za pomocí ORM pomocí EF, kde jsou vytvořený migrační balíčky pro vytvoření databáze a tabulek
-        - ConnectString pro vytváření migračních balíčků je nastavený MsSqlDbContextFactory, pokud by bylo potřeba vytvořit jiný migrační balíček, tak bude potřeba upravit connectstring
-    - v appsettings.json-> ConnectionStringsMSSQL je nastavený připojovací řetězec k databázi, aktuálně je nastavený na ServerName=., tím by měl být připojený na lokální instanci SQL serveru
-        - Pokud by bylo potřeba připojit na jinou instanci, tak je potřeba upravit tento řetězec
-    - aplikaci stačí sputit buď přes F5 nebo Ctrl+F5, nebo pak lze vytvořit public balíček a nasadit ho na IIS server, kde bude i DB
+Aplikaci lze spustit přímo z **Visual Studio 2022**:
+- Vyžaduje pouze dostupnou instanci **Microsoft SQL Serveru**.
+- Databáze i tabulky se vytvoří automaticky při prvním spuštění.
+- Spuštění: `F5` nebo `Ctrl+F5`.
 
-## Popis časové náročnosti
-- Celkový čas na vytvoření aplikace byl přibližně 16 hodin
-    - Přípravná práce: 2 hodina
-    - Vývoj (BE+ FE): 13 hodin
-    - Dokumentace: 1 hodin
-    - Vývoj testování: 0 hodiny
+Volitelně lze aplikaci publikovat jako webový balíček a nasadit na **IIS server**.
 
-## Changes
+---    
+## Poznámky
+
+- Migrace databáze se provádějí přes `MsSqlDbContextFactory`.  
+  Při vytváření nového migračního balíčku je nutné upravit připojovací řetězec.
+- `appsettings.json` obsahuje výchozí `ServerName=.` pro lokální instanci SQL Serveru.
+- Swagger dokumentace je dostupná po spuštění aplikace na adrese:  
+  **`/swagger/index.html`**
+
+---
+
+## Časová náročnost vývoje
+
+| Fáze práce             | Čas |
+|------------------------|------:|
+| Přípravná práce        | 2 h |
+| Vývoj (BE + FE)        | 13 h |
+| Dokumentace            | 1 h |
+| Testování              | 0 h |
+| **Celkem:**            | **16 h** |
+
+---
+
+
+## Changes (verzování)
 
 Legend: 
 
@@ -109,7 +101,7 @@ Hlavní kategorie
 - ❌ - Odstranění funkce
 - 🛢 - Databázové úpravy
 
-Dodatečné info
+Dodatečné info:
 - 🔒 - Nezveřejňovat informaci zákazníkovi
 - 🔥 – Kritická
 - ⚠ – Důležitá -> ovlivňující mnoho uživatelů
@@ -141,3 +133,13 @@ Dodatečné info
 - 🚀 vytvořené základní funkcionality aplikace dle požadavku projektu
     - jenom je potřeba dodělat změnu poznámek k zánamu ([#15-Uložit změny poznámek k záznamu
 ](https://github.com/M-STR15/BitcoinPriceTracking/issues/15))
+
+---
+
+## Authors
+
+[@M-STR](https://github.com/M-STR15)
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
